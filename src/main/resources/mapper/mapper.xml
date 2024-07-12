@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.mapper.UserMapper">
+
+    <insert id="save" parameterType="board.dto.Member">
+        insert into member (login_id, password, name, email, role)
+            values (#{loginId}, #{password}, #{name}, #{email}, #{role})
+
+    </insert>
+
+    <select id="findByUserName" parameterType="java.lang.String" resultType="board.dto.Member">
+        select id, login_id, password, name, email, role, created_date
+        from member
+        where login_id = #{loginId}
+    </select>
+</mapper>

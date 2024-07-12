@@ -1,0 +1,29 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=MariaDB;
+    username: sa
+    password:
+  sql:
+    init:
+      schema-locations: schema.sql
+  jwt:
+    secret: secretKey
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: debug
+    com:
+      cos:
+        jwt:
+          mapper: trace
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/**/*.xml
