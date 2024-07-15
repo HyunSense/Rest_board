@@ -1,14 +1,16 @@
 package board.config.auth;
 
-import board.dto.Member;
+import board.entity.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 @RequiredArgsConstructor
 @Getter
 public class PrincipalDetails implements UserDetails {
@@ -30,7 +32,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getLoginId();
+        return member.getUsername();
     }
 
     // 기본값 true

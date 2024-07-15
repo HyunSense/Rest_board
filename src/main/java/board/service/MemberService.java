@@ -1,11 +1,12 @@
 package board.service;
 
-import board.dto.Member;
+import board.dto.MemberDto;
+import board.entity.Member;
 
 public interface MemberService {
 
-    void join(Member member);
+    void signUp(MemberDto memberDto);
 
-    Member login(String username);
+//    Member login(String username);
 
 }

@@ -2,38 +2,31 @@ package board.jwt;
 
 import board.config.auth.PrincipalDetails;
 import board.dto.request.auth.LoginRequestDto;
-import board.dto.response.LoginResponseDto;
-import board.dto.response.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.metadata.MethodType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
 @Slf4j
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+@RequiredArgsConstructor
+public class JwtAuthenticationFilterFormType extends UsernamePasswordAuthenticationFilter {
     // 다양한 유형의 인증요청을 처리하기위해 UsernamePasswordAuthenticationFilter 대신
     // AbstractAuthenticationProcessingFilter 사용
-    // addFilter 시 순서 확인
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final ObjectMapper objectMapper;
@@ -41,31 +34,32 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
     private static final String HTTP_METHOD = "POST";
 
-    // 1000 * 1 * 60 * 10 -> 10분
-    private static final Long EXPIRED_MS = 1000 * 60L * 10L;
-
-    private final static AntPathRequestMatcher DEFAULT_LOGIN_REQUEST_MATCHER =
-            new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD);
-
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ObjectMapper objectMapper) {
-        super(DEFAULT_LOGIN_REQUEST_MATCHER);
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.objectMapper = objectMapper;
-    }
-
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         log.info("jwtAuthenticationFilter 로그인 시도");
         String method = request.getMethod();
         log.info("method = {}", method);
 
-        BufferedReader reader = request.getReader();
-        LoginRequestDto loginRequestDto = objectMapper.readValue(reader, LoginRequestDto.class);
-        log.info("loginRequestDto = {}", loginRequestDto);
+//        String username = obtainUsername(request);
+//        String password = obtainPassword(request);
+//
+//        log.info("username = {}", username);
+//        log.info("password = {}", password);
+
+        LoginRequestDto loginRequestDto = null;
+
+        try {
+            BufferedReader reader = null;
+            reader = request.getReader();
+            loginRequestDto = objectMapper.readValue(reader, LoginRequestDto.class);
+            log.info("loginRequestDto = {}", loginRequestDto);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
@@ -89,27 +83,20 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String role = next.getAuthority();
         log.info("role = {}", role);
 
-        String token = jwtUtil.createJwt(username, role, EXPIRED_MS);
-        String expired = jwtUtil.getExpired(token);
+        // 1000 * 1 * 60 * 10 -> 10분
+        String token = jwtUtil.createJwt(username, role, 1000 * 60L * 10L);
 
-
-        ResponseEntity<LoginResponseDto> responseEntity = LoginResponseDto.success(token, expired);
         response.addHeader("Authorization", "Bearer " + token);
-        response.setStatus(responseEntity.getStatusCode().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
 
-        objectMapper.writeValue(response.getWriter(),responseEntity.getBody());
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
         log.info("JwtAuthenticationFilter fail");
-        ResponseEntity<ResponseDto> responseEntity = ResponseDto.validationFailed();
-        response.setStatus(responseEntity.getStatusCode().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), responseEntity.getBody());
+        PrintWriter out = response.getWriter();
+        out.println("LOGIN - FAIL");
+
+        response.setStatus(401);
     }
 }

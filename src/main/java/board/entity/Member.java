@@ -1,23 +1,23 @@
-package board.dto;
+package board.entity;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@Setter
 @ToString
 public class Member {
 
     private Long id;
-    private String loginId;
+    private String username;
     private String password;
     private String name;
     private String email;
     private String role;
-    private LocalDate createdDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

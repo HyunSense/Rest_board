@@ -1,6 +1,7 @@
 package board.config.auth;
 
-import board.dto.Member;
+import board.entity.Member;
+import board.exception.BadRequestExceptionHandler;
 import board.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,21 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         log.info("PrincipalDetailsService.loadUserByUsername");
+
         Member member = userMapper.findByUserName(username);
+        log.info("member = {}", member);
+
+
+        if (member == null) {
+
+//            throw BadRequestExceptionHandler.validationFailed();
+
+        }
 
         return new PrincipalDetails(member);
+
+
+
+
     }
 }

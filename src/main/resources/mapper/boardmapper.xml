@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.mapper.BoardMapper">
+
+    <insert id="save" parameterType="board.entity.Board">
+        insert into board (member_id, title, content)
+        values (#{memberId}, #{title}, #{content});
+    </insert>
+
+    <select id="findByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
+        select id,
+               member_id,
+               title,
+               content,
+               view_count,
+               created_at,
+               updated_at,
+               is_deleted
+        from board
+        where member_id = #{memberId}
+    </select>
+
+</mapper>

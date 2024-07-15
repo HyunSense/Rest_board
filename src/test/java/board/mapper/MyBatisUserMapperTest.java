@@ -1,16 +1,18 @@
 package board.mapper;
 
-import board.dto.Member;
+import board.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
+import static org.assertj.core.api.Assertions.*;
+
 @MybatisTest
 //@SpringBootTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class MyBatisMapperTest {
+public class MyBatisUserMapperTest {
 
 
     @Autowired
@@ -20,7 +22,7 @@ public class MyBatisMapperTest {
     void save() {
 
         Member member = Member.builder()
-                .loginId("jaehoon1022")
+                .username("jaehoon1022")
                 .password("1234")
                 .name("hyun")
                 .email("jaehoon1022@naver.com")
@@ -31,9 +33,12 @@ public class MyBatisMapperTest {
 
         userMapper.save(member);
 //
-        Member foundMember = userMapper.findByUserName("jaehoon1022");
-//
-        System.out.println("foundUser = " + foundMember);
+        Member saveMember = userMapper.findByUserName("jaehoon1022");
+
+        assertThat(saveMember.getUsername()).isEqualTo("jaehoon1022");
+        assertThat(saveMember.getName()).isEqualTo("hyun");
+
+        System.out.println("saveMember = " + saveMember);
 
     }
 }

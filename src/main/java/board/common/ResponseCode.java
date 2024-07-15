@@ -6,8 +6,11 @@ public interface ResponseCode {
     String SUCCESS = "SU";
 
     // Http Status 400
+
+    String VALIDATION_FAILED = "VF";
     String DUPLICATE_LOGIN_ID = "DL";
     String DUPLICATE_EMAIL = "DE";
+    String NOT_EXIST_USER = "NU";
     String NOT_EXIST_BOARD = "NB";
 
     // Http Status 401

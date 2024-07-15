@@ -15,22 +15,14 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-//    private SecretKey secretKey;
-
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
+    // 테스트용
     public void setSecretKey(String secretKey) {
 
         this.secretKey = secretKey;
     }
-
-
-//    public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
-//
-//        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Algorithm.HMAC256(secret).toString());
-//        log.info("secretKey = {}", secretKey);
-//    }
 
     public String getUsername(String token) {
 
@@ -58,6 +50,13 @@ public class JWTUtil {
                 .verify(token)
                 .getExpiresAt().before(new Date());
 
+    }
+
+    public String getExpired(String token) {
+        return JWT.require(Algorithm.HMAC256(secretKey))
+                .build()
+                .verify(token)
+                .getExpiresAt().toString();
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
