@@ -1,15 +1,14 @@
-package board.dto.request.auth;
+package board.dto.request.board;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Builder
+@Setter
 @ToString
-public class PostRequestDto {
+public class PostBoardRequestDto {
 
     // null, 공백, 빈문자열 x
     @NotBlank

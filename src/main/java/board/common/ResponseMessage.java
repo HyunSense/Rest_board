@@ -16,7 +16,9 @@ public interface ResponseMessage {
     String NOT_EXIST_BOARD = "The Board does not exist";
 
     // Http Status 401
-    String LOGIN_FAIL = "Login Failed. Invalid loginId or password format";
+    String LOGIN_FAILED = "Login Failed. Invalid loginId or password format";
+    String TOKEN_EXPIRED = "Token expired";
+    String INVALID_TOKEN = "Invalid Token";
 
     // Http status 403
     String PERMISSION_DENIED = "Permission denied";

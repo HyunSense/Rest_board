@@ -21,7 +21,7 @@ class JWTUtilTest {
         jwtUtil.setSecretKey("this_is_secretKey");
 
         Long expiredMs = 60000 * 5L; // 5m
-        token = jwtUtil.createJwt("jaehoon1022", "ROLE_USER", expiredMs);
+        token = jwtUtil.createJwt(1L, "jaehoon1022", "ROLE_USER", expiredMs);
         System.out.println("token = " + token);
 
     }
@@ -49,7 +49,7 @@ class JWTUtilTest {
         JWTUtil jwt = new JWTUtil();
         jwt.setSecretKey("secret");
         Long expiredMs = 1L; // 1ms
-        String expiredToken = jwt.createJwt("hyun", "ROLE_USER", expiredMs);
+        String expiredToken = jwt.createJwt(1L, "hyun", "ROLE_USER", expiredMs);
 
         Assertions.assertThatThrownBy(() -> jwt.isExpired(expiredToken))
                 .isInstanceOf(TokenExpiredException.class);

@@ -18,10 +18,8 @@ logging:
     org:
       springframework:
         jdbc: debug
-    com:
-      cos:
-        jwt:
-          mapper: trace
+    board:
+      mapper: trace
 
 mybatis:
   configuration:

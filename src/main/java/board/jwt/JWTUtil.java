@@ -2,6 +2,7 @@ package board.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,16 @@ public class JWTUtil {
     public void setSecretKey(String secretKey) {
 
         this.secretKey = secretKey;
+    }
+
+    public Long getId(String token) {
+
+        return JWT.require(Algorithm.HMAC256(secretKey))
+                .build()
+                .verify(token)
+                .getClaim("id")
+                .asLong();
+
     }
 
     public String getUsername(String token) {
@@ -59,12 +70,13 @@ public class JWTUtil {
                 .getExpiresAt().toString();
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(Long id, String username, String role, Long expiredMs) {
 
-        log.info("expired = {}", new Date(System.currentTimeMillis() + expiredMs));
+//        log.info("expired = {}", new Date(System.currentTimeMillis() + expiredMs));
 
         return JWT.create()
                 .withSubject("JWT토큰")
+                .withClaim("id", id)
                 .withClaim("username", username)
                 .withClaim("role", role)
                 .withIssuedAt(new Date(System.currentTimeMillis()))

@@ -4,11 +4,21 @@
 <mapper namespace="board.mapper.BoardMapper">
 
     <insert id="save" parameterType="board.entity.Board">
-        insert into board (member_id, title, content)
+        insert into board (
+                           member_id,
+                           title,
+                           content
+        )
         values (#{memberId}, #{title}, #{content});
     </insert>
 
-    <select id="findByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
+    <update id="updateBoard" parameterType="board.entity.Board">
+        update board
+        set title = #{title}, content = #{content}
+        where id = #{id}
+    </update>
+
+    <select id="findAllByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
         select id,
                member_id,
                title,
@@ -21,4 +31,47 @@
         where member_id = #{memberId}
     </select>
 
+    <!-- ANSI -->
+    <select id="getBoardById" parameterType="java.lang.Long" resultType="board.mapper.resultset.GetBoardResultSet">
+        select B.id,
+               B.title,
+               B.content,
+               M.username as author,
+               B.view_count,
+               B.created_at,
+               B.updated_at
+        from board B left join member M
+        on B.member_id = M.id
+        where B.id = #{id}
+    </select>
+
+    <select id="findById" resultType="board.entity.Board">
+        select id,
+               member_id,
+               title,
+               content,
+               view_count,
+               created_at,
+               updated_at,
+               is_deleted
+        from board
+        where id = #{id}
+    </select>
+
+    <select id="getAllBoard" resultType="board.mapper.resultset.GetBoardResultSet">
+        select B.id,
+               B.title,
+               B.content,
+               M.username as author,
+               B.view_count,
+               B.created_at,
+               B.updated_at
+        from board B left join member M
+        on B.member_id = M.id
+        limit #{limit} offset #{offset}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from board where id = #{id}
+    </delete>
 </mapper>

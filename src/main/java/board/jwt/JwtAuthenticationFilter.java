@@ -2,16 +2,14 @@ package board.jwt;
 
 import board.config.auth.PrincipalDetails;
 import board.dto.request.auth.LoginRequestDto;
-import board.dto.response.LoginResponseDto;
+import board.dto.response.auth.LoginResponseDto;
 import board.dto.response.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.metadata.MethodType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,8 +22,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -38,8 +34,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private final JWTUtil jwtUtil;
     private final ObjectMapper objectMapper;
 
-    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
+    private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/v1/auth/login";
+//    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
     private static final String HTTP_METHOD = "POST";
+    private static final String BEARER = "Bearer ";
 
     // 1000 * 1 * 60 * 10 -> 10분
     private static final Long EXPIRED_MS = 1000 * 60L * 10L;
@@ -59,12 +57,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
-        log.info("jwtAuthenticationFilter 로그인 시도");
+        log.info("JwtAuthenticationFilter.attemptAuthentication");
         String method = request.getMethod();
         log.info("method = {}", method);
 
-        BufferedReader reader = request.getReader();
-        LoginRequestDto loginRequestDto = objectMapper.readValue(reader, LoginRequestDto.class);
+        LoginRequestDto loginRequestDto = objectMapper.readValue(request.getReader(), LoginRequestDto.class);
         log.info("loginRequestDto = {}", loginRequestDto);
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -76,25 +73,25 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        log.info("JwtAuthenticationFilter success");
+        log.info("JwtAuthenticationFilter.successfulAuthentication");
 
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String username = principalDetails.getUsername();
+        Long id = principalDetails.getId();
 
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority next = iterator.next();
 
         String role = next.getAuthority();
-        log.info("role = {}", role);
 
-        String token = jwtUtil.createJwt(username, role, EXPIRED_MS);
+        String token = jwtUtil.createJwt(id, username, role, EXPIRED_MS);
         String expired = jwtUtil.getExpired(token);
 
 
         ResponseEntity<LoginResponseDto> responseEntity = LoginResponseDto.success(token, expired);
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", BEARER + token);
         response.setStatus(responseEntity.getStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
@@ -105,8 +102,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
-        log.info("JwtAuthenticationFilter fail");
-        ResponseEntity<ResponseDto> responseEntity = ResponseDto.validationFailed();
+        log.info("JwtAuthenticationFilter.unsuccessfulAuthentication");
+
+        ResponseEntity<ResponseDto> responseEntity = LoginResponseDto.loginFailed();
         response.setStatus(responseEntity.getStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

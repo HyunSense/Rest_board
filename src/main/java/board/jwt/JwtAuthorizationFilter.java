@@ -1,14 +1,16 @@
 package board.jwt;
 
 import board.config.auth.PrincipalDetails;
-import board.dto.MemberDto;
 import board.entity.Member;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,6 +22,7 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
     private final JWTUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 //    private static final String BEARER = "Bearer ";
 
     @Override
@@ -27,32 +30,43 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
         log.info("JwtAuthorizationFilter.doFilterInternal");
 
-        String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // header가 있는지 확인
         if (authorization == null || !authorization.startsWith("Bearer")) {
-            log.info("token has null");
+
+            if (authorization == null) {
+                log.info("Authorization header is missing.");
+            } else {
+                log.info("Authorization header does not start with 'Bearer '.");
+            }
+
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-//        String token = request.getHeader("Authorization").replace(BEARER, "");
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).replace("Bearer ", "");
 
-        if (jwtUtil.isExpired(token)) {
-            log.info("token expired");
+        try {
+
+            jwtUtil.isExpired(token);
+
+        } catch (JWTVerificationException e) {
+
+            request.setAttribute("exception", e);
             filterChain.doFilter(request, response);
             return;
         }
 
+        Long id = jwtUtil.getId(token);
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
 
         Member member = Member.builder()
+                .id(id)
                 .username(username)
                 .role(role)
                 .build();
-
 
         PrincipalDetails principalDetails = new PrincipalDetails(member);
         UsernamePasswordAuthenticationToken authToken =

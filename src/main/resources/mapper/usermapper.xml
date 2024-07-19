@@ -21,4 +21,16 @@
         from member
         where username = #{username}
     </select>
+
+    <select id="existsByUsername" resultType="java.lang.Boolean">
+        select if(count(*) = 1, 1, 0)
+        from member
+        where username = #{username}
+    </select>
+
+    <select id="existsByEmail" resultType="java.lang.Boolean">
+        select if(count(*) = 1, 1, 0)
+        from member
+        where email = #{email}
+    </select>
 </mapper>
