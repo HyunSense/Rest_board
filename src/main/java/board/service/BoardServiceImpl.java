@@ -25,6 +25,10 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
 
+    private final static String TYPE_AUTHOR = "author";
+    private final static String TYPE_TITLE = "title";
+    private final static String TYPE_CONTENT = "content";
+
     private final BoardMapper boardMapper;
 
     @Override
@@ -235,5 +239,21 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return DeleteCommentResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(String type, String keyword) {
+
+        try {
+
+        } catch (Exception e) {
+
+            return ResponseDto.databaseError();
+        }
+        boardMapper.findBoardByType(type, keyword);
+
+
+
+        return GetSearchBoardListResponseDto.success();
     }
 }

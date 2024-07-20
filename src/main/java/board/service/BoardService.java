@@ -18,4 +18,6 @@ public interface BoardService {
     ResponseEntity<? super PostCommentResponseDto> createComment(PostCommentRequestDto dto, Long memberId, Long boardId);
     ResponseEntity<? super DeleteCommentResponseDto> deleteComment(Long memberId, Long boardId, Long id);
 
+    ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(String type, String keyword);
+
 }
