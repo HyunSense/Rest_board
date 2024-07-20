@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 @Getter
 public class PostBoardResponseDto extends ResponseDto {
 
-    //TODO: 생성자 범위 public? private?
+
     private PostBoardResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

@@ -3,7 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board.mapper.BoardMapper">
 
-    <insert id="save" parameterType="board.entity.Board">
+    <!-- BOARD -->
+    <insert id="saveBoard" parameterType="board.entity.Board">
         insert into board
             (
              member_id,
@@ -19,12 +20,25 @@
         where id = #{id}
     </update>
 
+    <update id="updateViewCountBoard" parameterType="board.entity.Board">
+        update board
+        set view_count = #{viewCount}, updated_at = #{updatedAt}
+        where id = #{id}
+    </update>
+
+    <update id="updateCommentCountBoard" parameterType="board.entity.Board">
+        update board
+        set comment_count = #{commentCount}, updated_at = #{updatedAt}
+        where id = #{id}
+    </update>
+
     <select id="findAllByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
         select id,
                member_id,
                title,
                content,
                view_count,
+               comment_count,
                created_at,
                updated_at,
                is_deleted
@@ -38,25 +52,25 @@
                B.title,
                B.content,
                M.username as author,
-               B.view_count,
                B.created_at,
                B.updated_at
         from board B left join member M
         on B.member_id = M.id
-        where B.id = #{id}
+        where B.id = #{id} and is_deleted = 0
     </select>
 
-    <select id="findById" resultType="board.entity.Board">
+    <select id="findBoardById" resultType="board.entity.Board">
         select id,
                member_id,
                title,
                content,
                view_count,
+               comment_count,
                created_at,
                updated_at,
                is_deleted
         from board
-        where id = #{id}
+        where id = #{id} and is_deleted = 0
     </select>
 
     <select id="getAllBoard" resultType="board.mapper.resultset.GetBoardResultSet">
@@ -64,15 +78,50 @@
                B.title,
                B.content,
                M.username as author,
-               B.view_count,
                B.created_at,
                B.updated_at
         from board B left join member M
         on B.member_id = M.id
+        where B.is_deleted = 0
         limit #{limit} offset #{offset}
     </select>
 
-    <delete id="deleteById" parameterType="java.lang.Long">
-        delete from board where id = #{id}
+    <delete id="deleteBoardById" parameterType="java.lang.Long">
+#         delete from board where id = #{id}
+        update board set is_deleted = 1 where id = #{id}
+    </delete>
+
+    <!-- COMMENT -->
+    <insert id="saveComment" parameterType="board.entity.Comment">
+        insert into comment
+        (
+         member_id,
+         board_id,
+         content
+        )
+        values (#{memberId}, #{boardId}, #{content})
+    </insert>
+
+    <select id="findCommentById" resultType="board.entity.Comment">
+        select id,
+               member_id,
+               board_id,
+               content,
+               created_at,
+               is_deleted
+        from comment
+        where id = #{id} and is_deleted = 0;
+    </select>
+
+    <select id="countCommentByBoardId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(board_id) from comment where board_id = #{boardId}
+    </select>
+
+    <delete id="deleteCommentById" parameterType="java.lang.Long">
+        update comment set is_deleted = 1 where id = #{id} and board_id = #{boardId}
+    </delete>
+
+    <delete id="deleteBoardCommentAllByBoardId" parameterType="java.lang.Long">
+        update comment set is_deleted = 1 where board_id = #{boardId}
     </delete>
 </mapper>

@@ -1,13 +1,13 @@
 package board.entity;
 
 import board.dto.request.board.PatchBoardRequestDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @ToString
 public class Board {
@@ -17,6 +17,7 @@ public class Board {
     private String title;
     private String content;
     private Long viewCount;
+    private int commentCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int isDeleted;
@@ -24,5 +25,13 @@ public class Board {
     public void patchBoard(PatchBoardRequestDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
+
+    public void increaseComment() {
+        this.commentCount++;
     }
 }

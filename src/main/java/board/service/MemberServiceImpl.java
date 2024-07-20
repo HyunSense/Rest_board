@@ -1,6 +1,5 @@
 package board.service;
 
-import board.common.Role;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.ResponseDto;
 import board.dto.response.auth.SignUpResponseDto;
@@ -11,10 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Transactional
+@Service
 public class MemberServiceImpl implements MemberService {
 
 

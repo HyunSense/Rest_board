@@ -6,19 +6,17 @@ public interface ResponseMessage {
     String SUCCESS = "Success";
 
     // Http Status 400
-
     String VALIDATION_FAILED = "Validation failed";
-
-    String DUPLICATE_LOGIN_ID = "Duplicate loginId";
+    String DUPLICATE_USERNAME = "Duplicate username";
     String DUPLICATE_EMAIL = "Duplicate email";
-    String NOT_EXIST_USER = "The User does not exist";
-
-    String NOT_EXIST_BOARD = "The Board does not exist";
+    String NOT_EXIST_USER = "User does not exist";
+    String NOT_EXIST_BOARD = "Board does not exist";
+    String NOT_EXIST_COMMENT = "Comment does not exist";
 
     // Http Status 401
-    String LOGIN_FAILED = "Login Failed. Invalid loginId or password format";
+    String LOGIN_FAILED = "Login failed. Invalid username or password format";
     String TOKEN_EXPIRED = "Token expired";
-    String INVALID_TOKEN = "Invalid Token";
+    String INVALID_TOKEN = "Invalid token";
 
     // Http status 403
     String PERMISSION_DENIED = "Permission denied";

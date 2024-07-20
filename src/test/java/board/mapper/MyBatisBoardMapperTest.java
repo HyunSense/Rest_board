@@ -48,7 +48,7 @@ public class MyBatisBoardMapperTest {
                 .content("테스트용 내용입니다.")
                 .build();
 
-        boardMapper.save(board);
+        boardMapper.saveBoard(board);
         saveBoard = boardMapper.findAllByMemberId(1L);
     }
 
@@ -65,7 +65,7 @@ public class MyBatisBoardMapperTest {
         System.out.println("board = " + board);
 
 
-        boardMapper.save(board);
+        boardMapper.saveBoard(board);
         Board saveBoard = boardMapper.findAllByMemberId(1L);
         System.out.println("saveBoard = " + saveBoard);
 

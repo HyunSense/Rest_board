@@ -4,7 +4,14 @@
 <mapper namespace="board.mapper.UserMapper">
 
     <insert id="save" parameterType="board.entity.Member">
-        insert into member (username, password, name, email, role)
+        insert into member
+            (
+             username,
+             password,
+             name,
+             email,
+             role
+            )
             values (#{username}, #{password}, #{name}, #{email}, #{role})
 
     </insert>

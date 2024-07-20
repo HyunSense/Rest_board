@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 public class SignUpResponseDto extends ResponseDto {
 
 
-    public SignUpResponseDto() {
+    private SignUpResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
@@ -23,7 +23,7 @@ public class SignUpResponseDto extends ResponseDto {
 
     public static ResponseEntity<ResponseDto> existLoginId() {
 
-        ResponseDto responseDto = new ResponseDto(ResponseCode.DUPLICATE_LOGIN_ID, ResponseMessage.DUPLICATE_LOGIN_ID);
+        ResponseDto responseDto = new ResponseDto(ResponseCode.DUPLICATE_USERNAME, ResponseMessage.DUPLICATE_USERNAME);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
     }
 

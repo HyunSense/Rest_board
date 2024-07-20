@@ -8,10 +8,11 @@ public interface ResponseCode {
     // Http Status 400
 
     String VALIDATION_FAILED = "VF";
-    String DUPLICATE_LOGIN_ID = "DL";
+    String DUPLICATE_USERNAME = "DU";
     String DUPLICATE_EMAIL = "DE";
     String NOT_EXIST_USER = "NU";
     String NOT_EXIST_BOARD = "NB";
+    String NOT_EXIST_COMMENT = "NC";
 
     // Http Status 401
     String LOGIN_FAILED = "LF";
@@ -22,6 +23,6 @@ public interface ResponseCode {
     String PERMISSION_DENIED = "PD";
 
     // Http Status 500
-    String DATABASE_ERROR = "DE";
+    String DATABASE_ERROR = "DBE";
 
 }

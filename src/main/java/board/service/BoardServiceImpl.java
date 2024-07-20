@@ -3,20 +3,25 @@ package board.service;
 import board.dto.request.board.GetBoardAllRequestDto;
 import board.dto.request.board.PatchBoardRequestDto;
 import board.dto.request.board.PostBoardRequestDto;
+import board.dto.request.board.PostCommentRequestDto;
 import board.dto.response.*;
 import board.dto.response.board.*;
 import board.entity.Board;
+import board.entity.Comment;
 import board.mapper.BoardMapper;
 import board.mapper.resultset.GetBoardResultSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class BoardServiceImpl implements BoardService {
 
@@ -36,13 +41,14 @@ public class BoardServiceImpl implements BoardService {
                     .content(content)
                     .build();
 
-            boardMapper.save(board);
-            return PostBoardResponseDto.success();
+            boardMapper.saveBoard(board);
 
         } catch (Exception e) {
             log.warn("createBoard exception = ", e);
             return ResponseDto.databaseError();
         }
+
+        return PostBoardResponseDto.success();
     }
 
     @Override
@@ -82,6 +88,10 @@ public class BoardServiceImpl implements BoardService {
                 return GetBoardResponseDto.notExistBoard();
             }
 
+            Board board = boardMapper.findBoardById(id);
+            board.increaseViewCount();
+            boardMapper.updateViewCountBoard(board);
+
         } catch (Exception e) {
             log.warn("getBoardById exception = ", e);
             return ResponseDto.databaseError();
@@ -95,7 +105,7 @@ public class BoardServiceImpl implements BoardService {
 
         try {
 
-            Board board = boardMapper.findById(id);
+            Board board = boardMapper.findBoardById(id);
 
             if (board == null) {
                 return PatchBoardResponseDto.notExistBoard();
@@ -106,6 +116,18 @@ public class BoardServiceImpl implements BoardService {
 
             if (!isMemberId) {
                 return PatchBoardResponseDto.notPermission();
+            }
+
+            if (!StringUtils.hasText(dto.getTitle()) && !StringUtils.hasText(dto.getContent())) {
+                return ResponseDto.validationFailed();
+            }
+
+            if (!StringUtils.hasText(dto.getTitle())) {
+                dto.setTitle(board.getTitle());
+            }
+
+            if (!StringUtils.hasText(dto.getContent())) {
+                dto.setContent(board.getContent());
             }
 
             board.patchBoard(dto);
@@ -124,7 +146,7 @@ public class BoardServiceImpl implements BoardService {
 
         try {
 
-            Board board = boardMapper.findById(id);
+            Board board = boardMapper.findBoardById(id);
 
             if (board == null) {
                 return DeleteBoardResponseDto.notExistBoard();
@@ -137,7 +159,12 @@ public class BoardServiceImpl implements BoardService {
                 return DeleteBoardResponseDto.notPermission();
             }
 
-            boardMapper.deleteById(id);
+            int count = boardMapper.countCommentByBoardId(id);
+            if (count > 0) {
+                boardMapper.deleteBoardCommentAllByBoardId(id);
+            }
+
+            boardMapper.deleteBoardById(id);
 
         } catch (Exception e) {
             log.warn("deleteBoardById exception = ", e);
@@ -145,5 +172,68 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return DeleteBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> createComment(PostCommentRequestDto dto, Long memberId, Long boardId) {
+
+        try {
+
+            Board board = boardMapper.findBoardById(boardId);
+
+            if (board == null) {
+                return PostCommentResponseDto.notExistBoard();
+            }
+
+            board.increaseComment();
+            boardMapper.updateCommentCountBoard(board);
+
+            String content = dto.getContent();
+
+            Comment comment = Comment.builder()
+                    .memberId(memberId)
+                    .boardId(boardId)
+                    .content(content)
+                    .build();
+
+            boardMapper.saveComment(comment);
+
+        } catch (Exception e) {
+            log.warn("createComment exception = ", e);
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteCommentResponseDto> deleteComment(Long memberId, Long boardId, Long id) {
+
+        try {
+
+            Board board = boardMapper.findBoardById(boardId);
+            if (board == null) {
+                return DeleteCommentResponseDto.notExistBoard();
+            }
+
+            Comment comment = boardMapper.findCommentById(id);
+            if (comment == null) {
+                return DeleteCommentResponseDto.notExistComment();
+            }
+
+            Long commentMemberId = comment.getMemberId();
+            boolean isMemberId = commentMemberId.equals(memberId);
+            if (!isMemberId) {
+                return DeleteCommentResponseDto.notPermission();
+            }
+
+            boardMapper.deleteCommentById(boardId, id);
+
+        } catch (Exception e) {
+            log.warn("deleteComment exception = ", e);
+            return ResponseDto.databaseError();
+        }
+
+        return DeleteCommentResponseDto.success();
     }
 }
