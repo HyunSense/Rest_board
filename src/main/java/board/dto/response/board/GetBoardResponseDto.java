@@ -3,7 +3,7 @@ package board.dto.response.board;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.response.ResponseDto;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,25 +19,25 @@ public class GetBoardResponseDto extends ResponseDto {
     private String title;
     private String content;
     private String author;
-//    private Long viewCount;
-//    private int commentCount;
+    private Long viewCount;
+    private int commentCount;
     private String createdAt;
     private String updatedAt;
 
-    private GetBoardResponseDto(GetBoardResultSet resultSet) {
+    private GetBoardResponseDto(BoardResultSet resultSet) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
 
         this.id = resultSet.getId();
         this.title = resultSet.getTitle();
         this.content = resultSet.getContent();
         this.author = resultSet.getAuthor();
-//        this.viewCount = resultSet.getViewCount();
-//        this.commentCount = resultSet.getCommentCount();
+        this.viewCount = resultSet.getViewCount();
+        this.commentCount = resultSet.getCommentCount();
         this.createdAt = resultSet.getCreatedAt();
         this.updatedAt = resultSet.getUpdatedAt();
     }
 
-    public static ResponseEntity<GetBoardResponseDto> success(GetBoardResultSet resultSet) {
+    public static ResponseEntity<GetBoardResponseDto> success(BoardResultSet resultSet) {
 
         GetBoardResponseDto responseBody = new GetBoardResponseDto(resultSet);
 

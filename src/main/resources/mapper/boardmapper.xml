@@ -47,14 +47,16 @@
     </select>
 
     <!-- ANSI -->
-    <select id="getBoardById" parameterType="java.lang.Long" resultType="board.mapper.resultset.GetBoardResultSet">
+    <select id="getBoardById" parameterType="java.lang.Long" resultType="board.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
                M.username as author,
+               view_count,
+               comment_count,
                B.created_at,
                B.updated_at
-        from board B left join member M
+        from board B inner join member M
         on B.member_id = M.id
         where B.id = #{id} and is_deleted = 0
     </select>
@@ -73,14 +75,16 @@
         where id = #{id} and is_deleted = 0
     </select>
 
-    <select id="getAllBoard" resultType="board.mapper.resultset.GetBoardResultSet">
+    <select id="getAllBoard" resultType="board.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
                M.username as author,
+               B.view_count,
+               B.comment_count,
                B.created_at,
                B.updated_at
-        from board B left join member M
+        from board B inner join member M
         on B.member_id = M.id
         where B.is_deleted = 0
         limit #{limit} offset #{offset}
@@ -114,7 +118,7 @@
     </select>
 
     <select id="countCommentByBoardId" parameterType="java.lang.Long" resultType="java.lang.Integer">
-        select count(board_id) from comment where board_id = #{boardId}
+        select count(board_id) from comment where board_id = #{boardId} and is_deleted = 0;
     </select>
 
     <delete id="deleteCommentById" parameterType="java.lang.Long">
@@ -125,14 +129,16 @@
         update comment set is_deleted = 1 where board_id = #{boardId}
     </delete>
 
-    <select id="findBoardByTypeAndKeyword" resultType="board.mapper.resultset.GetBoardResultSet">
+    <select id="findBoardByTypeAndKeyword" resultType="board.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
                M.username as author,
+               B.view_count,
+               B.comment_count,
                B.created_at,
                B.updated_at
-        from board B left join member M
+        from board B inner join member M
                                on B.member_id = M.id
         <where>
             <choose>
@@ -148,5 +154,16 @@
             </choose>
             and B.is_deleted = 0
         </where>
+    </select>
+
+    <select id="findAllCommentByBoardId" resultType="board.mapper.resultset.CommentListResultSet">
+        select M.username as username,
+               C.content,
+               C.created_at
+        from comment C
+                 inner join member M
+                            on C.member_id = M.id
+        where board_id = #{boardId}
+          and is_deleted = 0
     </select>
 </mapper>

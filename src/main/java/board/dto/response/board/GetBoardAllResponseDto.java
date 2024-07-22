@@ -3,7 +3,7 @@ package board.dto.response.board;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.response.ResponseDto;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -17,16 +17,16 @@ public class GetBoardAllResponseDto extends ResponseDto {
 
     private int page;
     private int limit;
-    List<GetBoardResultSet> boardList;
+    private List<BoardResultSet> boardList;
 
-    private GetBoardAllResponseDto(int page, int limit, List<GetBoardResultSet> boardList) {
+    private GetBoardAllResponseDto(int page, int limit, List<BoardResultSet> boardList) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.page = page;
         this.limit = limit;
         this.boardList = boardList;
     }
 
-    public static ResponseEntity<GetBoardAllResponseDto> success(int page, int limit, List<GetBoardResultSet> boardList) {
+    public static ResponseEntity<GetBoardAllResponseDto> success(int page, int limit, List<BoardResultSet> boardList) {
 
         GetBoardAllResponseDto responseBody = new GetBoardAllResponseDto(page, limit, boardList);
 

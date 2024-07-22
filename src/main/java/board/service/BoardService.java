@@ -17,4 +17,6 @@ public interface BoardService {
 
     ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(GetSearchBoardListRequestDto dto);
 
+    ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardId);
+
 }

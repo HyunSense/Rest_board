@@ -73,6 +73,14 @@ public class BoardController {
         return boardService.deleteBoard(principalDetails.getId(), id);
     }
 
+    //댓글리스트 조회
+    @GetMapping("/post/{boardId}/comment-list")
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(@PathVariable Long boardId) {
+
+        return boardService.getCommentList(boardId);
+    }
+
+    // 댓글 작성
     @PostMapping("/post/{boardId}/comment")
     public ResponseEntity<? super PostCommentResponseDto> postComment(
             @RequestBody @Valid PostCommentRequestDto dto,
@@ -82,6 +90,7 @@ public class BoardController {
         return boardService.createComment(dto, principalDetails.getId(), boardId);
     }
 
+    //댓글 삭제
     @DeleteMapping("/post/{boardId}/comment/{id}")
     public ResponseEntity<? super DeleteCommentResponseDto> deleteComment(
             @AuthenticationPrincipal PrincipalDetails principalDetails,

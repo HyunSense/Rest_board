@@ -6,7 +6,8 @@ import board.dto.response.board.*;
 import board.entity.Board;
 import board.entity.Comment;
 import board.mapper.BoardMapper;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
+import board.mapper.resultset.CommentListResultSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -55,7 +57,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super GetBoardAllResponseDto> getAllBoards(GetBoardAllRequestDto dto) {
 
-        List<GetBoardResultSet> boards = null;
+        List<BoardResultSet> boards = null;
         int page = dto.getPage();
         int limit = dto.getLimit();
 
@@ -79,7 +81,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoardById(Long id) {
 
-        GetBoardResultSet resultSet = null;
+        BoardResultSet resultSet = null;
 
         try {
 
@@ -230,6 +232,9 @@ public class BoardServiceImpl implements BoardService {
 
             boardMapper.deleteCommentById(boardId, id);
 
+            board.decreaseComment();
+            boardMapper.updateCommentCountBoard(board);
+
         } catch (Exception e) {
             log.warn("deleteComment exception = ", e);
             return ResponseDto.databaseError();
@@ -250,7 +255,7 @@ public class BoardServiceImpl implements BoardService {
 
         log.info("type = {}", type);
 
-        List<GetBoardResultSet> searchedList = null;
+        List<BoardResultSet> searchedList = null;
         int count = 0;
 
         try {
@@ -263,10 +268,31 @@ public class BoardServiceImpl implements BoardService {
 
             count = searchedList.size();
         } catch (Exception e) {
-
+            log.warn("getSearchBoard exception e = ", e);
             return ResponseDto.databaseError();
         }
 
         return GetSearchBoardListResponseDto.success(type, keyword, count, searchedList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardId) {
+
+        List<CommentListResultSet> commentList = null;
+
+        try {
+            Board board = boardMapper.findBoardById(boardId);
+            if (board == null) {
+                return GetCommentListResponseDto.notExistBoard();
+            }
+
+            commentList = boardMapper.findAllCommentByBoardId(boardId);
+
+        } catch (Exception e) {
+            log.warn("getCommentList exception = ", e);
+            return ResponseDto.databaseError();
+        }
+
+        return GetCommentListResponseDto.success(commentList);
     }
 }

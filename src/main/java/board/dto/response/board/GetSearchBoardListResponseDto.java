@@ -3,7 +3,7 @@ package board.dto.response.board;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.response.ResponseDto;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,9 @@ public class GetSearchBoardListResponseDto extends ResponseDto {
     private String type;
     private String keyword;
     private int count;
-    List<GetBoardResultSet> boardList;
+    private List<BoardResultSet> boardList;
 
-    private GetSearchBoardListResponseDto(String type, String keyword, int count, List<GetBoardResultSet> boardList) {
+    private GetSearchBoardListResponseDto(String type, String keyword, int count, List<BoardResultSet> boardList) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.type = type;
         this.keyword = keyword;
@@ -28,7 +28,7 @@ public class GetSearchBoardListResponseDto extends ResponseDto {
         this.boardList = boardList;
     }
 
-    public static ResponseEntity<GetSearchBoardListResponseDto> success(String type, String keyword, int count, List<GetBoardResultSet> boardList) {
+    public static ResponseEntity<GetSearchBoardListResponseDto> success(String type, String keyword, int count, List<BoardResultSet> boardList) {
 
         GetSearchBoardListResponseDto responseBody = new GetSearchBoardListResponseDto(type, keyword, count, boardList);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);

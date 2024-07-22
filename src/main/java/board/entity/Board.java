@@ -34,4 +34,8 @@ public class Board {
     public void increaseComment() {
         this.commentCount++;
     }
+
+    public void decreaseComment() {
+        this.commentCount--;
+    }
 }

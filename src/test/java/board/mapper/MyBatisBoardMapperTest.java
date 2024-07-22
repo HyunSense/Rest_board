@@ -2,7 +2,7 @@ package board.mapper;
 
 import board.entity.Board;
 import board.entity.Member;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -78,20 +78,20 @@ public class MyBatisBoardMapperTest {
     @Test
     void read() {
 
-        GetBoardResultSet resultSet = boardMapper.getBoardById(1L);
+        BoardResultSet resultSet = boardMapper.getBoardById(1L);
         System.out.println("resultSet = " + resultSet);
 
     }
 
     @Test
     void findBoardByType() {
-        List<GetBoardResultSet> boardList = boardMapper.findBoardByTypeAndKeyword("title", "한글");
-        for (GetBoardResultSet board : boardList) {
+        List<BoardResultSet> boardList = boardMapper.findBoardByTypeAndKeyword("title", "한글");
+        for (BoardResultSet board : boardList) {
             assertThat(board.getTitle()).contains("한글");
         }
 
-        List<GetBoardResultSet> boardList2 = boardMapper.findBoardByTypeAndKeyword("username", "jae");
-        for (GetBoardResultSet board : boardList2) {
+        List<BoardResultSet> boardList2 = boardMapper.findBoardByTypeAndKeyword("username", "jae");
+        for (BoardResultSet board : boardList2) {
             assertThat(board.getAuthor()).contains("jae");
         }
     }

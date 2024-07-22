@@ -2,7 +2,8 @@ package board.mapper;
 
 import board.entity.Board;
 import board.entity.Comment;
-import board.mapper.resultset.GetBoardResultSet;
+import board.mapper.resultset.BoardResultSet;
+import board.mapper.resultset.CommentListResultSet;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public interface BoardMapper {
 
     Board findBoardById(Long id);
 
-    GetBoardResultSet getBoardById(Long id);
+    BoardResultSet getBoardById(Long id);
 
-    List<GetBoardResultSet> getAllBoard(int limit, int offset);
+    List<BoardResultSet> getAllBoard(int limit, int offset);
 
     void updateViewCountBoard(Board board);
 
@@ -38,5 +39,7 @@ public interface BoardMapper {
 
     void deleteBoardCommentAllByBoardId(Long boardId);
 
-    List<GetBoardResultSet> findBoardByTypeAndKeyword(String type, String keyword);
+    List<BoardResultSet> findBoardByTypeAndKeyword(String type, String keyword);
+
+    List<CommentListResultSet> findAllCommentByBoardId(Long boardId);
 }
