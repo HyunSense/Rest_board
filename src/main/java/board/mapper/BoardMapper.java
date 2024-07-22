@@ -19,7 +19,7 @@ public interface BoardMapper {
 
     BoardResultSet getBoardById(Long id);
 
-    List<BoardResultSet> getAllBoard(int limit, int offset);
+    List<BoardResultSet> getAllBoard(Integer limit, Integer offset);
 
     void updateViewCountBoard(Board board);
 

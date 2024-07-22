@@ -17,11 +17,11 @@ public class GetBoardAllRequestDto {
 
     @Min(1)
     @Max(10)
-    private int page;
+    private Integer page;
 
     @Min(1)
     @Max(10)
-    private int limit;
+    private Integer limit;
 
     public GetBoardAllRequestDto() {
 
