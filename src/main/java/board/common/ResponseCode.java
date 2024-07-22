@@ -5,8 +5,10 @@ public interface ResponseCode {
     // Http Status 200
     String SUCCESS = "SU";
 
-    // Http Status 400
+    // Http Status 404
+    String NOT_EXIST_RESULT = "NER";
 
+    // Http Status 400
     String VALIDATION_FAILED = "VF";
     String DUPLICATE_USERNAME = "DU";
     String DUPLICATE_EMAIL = "DE";

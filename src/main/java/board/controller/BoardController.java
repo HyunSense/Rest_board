@@ -1,10 +1,7 @@
 package board.controller;
 
 import board.config.auth.PrincipalDetails;
-import board.dto.request.board.GetBoardAllRequestDto;
-import board.dto.request.board.PatchBoardRequestDto;
-import board.dto.request.board.PostBoardRequestDto;
-import board.dto.request.board.PostCommentRequestDto;
+import board.dto.request.board.*;
 import board.dto.response.board.*;
 import board.service.BoardService;
 import jakarta.validation.Valid;
@@ -41,6 +38,13 @@ public class BoardController {
 
         log.info("page = {}, limit = {}", dto.getPage(), dto.getLimit());
         return boardService.getAllBoards(dto);
+    }
+
+    // 글 검색 조회
+    @GetMapping("/post/search")
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardAll(@ModelAttribute GetSearchBoardListRequestDto dto) {
+
+        return boardService.getSearchBoard(dto);
     }
 
     // 글 조회

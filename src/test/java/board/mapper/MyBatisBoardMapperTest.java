@@ -3,7 +3,6 @@ package board.mapper;
 import board.entity.Board;
 import board.entity.Member;
 import board.mapper.resultset.GetBoardResultSet;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -11,25 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MybatisTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MyBatisBoardMapperTest {
 
     @Autowired
     BoardMapper boardMapper;
-
     @Autowired
     UserMapper userMapper;
-
     Member saveMember;
     Board saveBoard;
 
 
-    @BeforeAll
-    void setUp() {
+//    @BeforeAll
+    void init() {
 
         Member member = Member.builder()
                 .username("jaehoon1022")
@@ -81,6 +81,19 @@ public class MyBatisBoardMapperTest {
         GetBoardResultSet resultSet = boardMapper.getBoardById(1L);
         System.out.println("resultSet = " + resultSet);
 
+    }
+
+    @Test
+    void findBoardByType() {
+        List<GetBoardResultSet> boardList = boardMapper.findBoardByTypeAndKeyword("title", "한글");
+        for (GetBoardResultSet board : boardList) {
+            assertThat(board.getTitle()).contains("한글");
+        }
+
+        List<GetBoardResultSet> boardList2 = boardMapper.findBoardByTypeAndKeyword("username", "jae");
+        for (GetBoardResultSet board : boardList2) {
+            assertThat(board.getAuthor()).contains("jae");
+        }
     }
 
 }

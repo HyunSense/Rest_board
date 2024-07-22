@@ -6,7 +6,7 @@ create table member
     name         varchar(50)             not null,
     email        varchar(100)            null,
     role         varchar(50)             not null,
-    created_at   datetime default current_timestamp    not null,
+    created_at   datetime default current_timestamp not null,
     updated_at   datetime default current_timestamp on update current_timestamp not null
 );
 
@@ -17,6 +17,7 @@ create table board
     title        varchar(500)                    not null,
     content      varchar(5000)                   null,
     view_count   bigint default 0                not null,
+    comment_count int default 0                  not null,
     created_at   datetime default current_timestamp      not null,
     updated_at   datetime default current_timestamp on update current_timestamp not null,
     is_deleted   tinyint default 0               not null,
@@ -30,11 +31,19 @@ create table comment
         primary key,
     member_id    bigint       not null,
     board_id     bigint       not null,
-    -- writer_id    varchar(50)  not null,
     content      varchar(500) not null,
-    is_deleted   tinyint      not null,
+    created_at   datetime default current_timestamp not null,
+    is_deleted   tinyint default 0                  not null,
     constraint comment_board_id_fk
         foreign key (board_id) references board (id),
     constraint comment_user_id_fk
         foreign key (member_id) references member (id)
+);
+
+create table likes
+(
+    member_id varchar(50) not null,
+    board_id bigint      not null,
+    created_at datetime default current_timestamp not null,
+    primary key (member_id, board_id)
 );

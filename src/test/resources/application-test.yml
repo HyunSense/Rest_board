@@ -10,6 +10,8 @@ spring:
   sql:
     init:
       schema-locations: schema.sql
+      data-locations: data.sql
+      encoding: utf-8
   jwt:
     secret: secretKey
 

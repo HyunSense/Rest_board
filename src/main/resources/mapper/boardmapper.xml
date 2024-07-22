@@ -124,4 +124,29 @@
     <delete id="deleteBoardCommentAllByBoardId" parameterType="java.lang.Long">
         update comment set is_deleted = 1 where board_id = #{boardId}
     </delete>
+
+    <select id="findBoardByTypeAndKeyword" resultType="board.mapper.resultset.GetBoardResultSet">
+        select B.id,
+               B.title,
+               B.content,
+               M.username as author,
+               B.created_at,
+               B.updated_at
+        from board B left join member M
+                               on B.member_id = M.id
+        <where>
+            <choose>
+                <when test="type == 'username'">
+                    and M.username like concat('%', #{keyword}, '%')
+                </when>
+                <when test="type == 'title'">
+                    and B.title like concat('%', #{keyword}, '%')
+                </when>
+                <when test="type == 'content'">
+                    and B.content like concat('%', #{keyword}, '%')
+                </when>
+            </choose>
+            and B.is_deleted = 0
+        </where>
+    </select>
 </mapper>

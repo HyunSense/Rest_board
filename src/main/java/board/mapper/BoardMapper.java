@@ -37,4 +37,6 @@ public interface BoardMapper {
     void deleteCommentById(Long boardId, Long id);
 
     void deleteBoardCommentAllByBoardId(Long boardId);
+
+    List<GetBoardResultSet> findBoardByTypeAndKeyword(String type, String keyword);
 }

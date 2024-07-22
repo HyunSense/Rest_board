@@ -1,9 +1,6 @@
 package board.service;
 
-import board.dto.request.board.GetBoardAllRequestDto;
-import board.dto.request.board.PatchBoardRequestDto;
-import board.dto.request.board.PostBoardRequestDto;
-import board.dto.request.board.PostCommentRequestDto;
+import board.dto.request.board.*;
 import board.dto.response.*;
 import board.dto.response.board.*;
 import board.entity.Board;
@@ -242,18 +239,34 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(String type, String keyword) {
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(GetSearchBoardListRequestDto dto) {
+
+        String type = dto.getType();
+        String keyword = dto.getKeyword();
+
+        if (type.equals("author")) {
+            type = "username";
+        }
+
+        log.info("type = {}", type);
+
+        List<GetBoardResultSet> searchedList = null;
+        int count = 0;
 
         try {
 
+            searchedList = boardMapper.findBoardByTypeAndKeyword(type, keyword);
+
+            if (searchedList == null || searchedList.isEmpty()) {
+                return GetSearchBoardListResponseDto.noResult();
+            }
+
+            count = searchedList.size();
         } catch (Exception e) {
 
             return ResponseDto.databaseError();
         }
-        boardMapper.findBoardByType(type, keyword);
 
-
-
-        return GetSearchBoardListResponseDto.success();
+        return GetSearchBoardListResponseDto.success(type, keyword, count, searchedList);
     }
 }

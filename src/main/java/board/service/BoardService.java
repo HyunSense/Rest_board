@@ -1,9 +1,6 @@
 package board.service;
 
-import board.dto.request.board.GetBoardAllRequestDto;
-import board.dto.request.board.PatchBoardRequestDto;
-import board.dto.request.board.PostBoardRequestDto;
-import board.dto.request.board.PostCommentRequestDto;
+import board.dto.request.board.*;
 import board.dto.response.board.*;
 import org.springframework.http.ResponseEntity;
 
@@ -18,6 +15,6 @@ public interface BoardService {
     ResponseEntity<? super PostCommentResponseDto> createComment(PostCommentRequestDto dto, Long memberId, Long boardId);
     ResponseEntity<? super DeleteCommentResponseDto> deleteComment(Long memberId, Long boardId, Long id);
 
-    ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(String type, String keyword);
+    ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoard(GetSearchBoardListRequestDto dto);
 
 }

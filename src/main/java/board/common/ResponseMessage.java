@@ -5,6 +5,9 @@ public interface ResponseMessage {
     // Http Status 200
     String SUCCESS = "Success";
 
+    // Http Status 404
+    String NOT_EXIST_RESULT = "No search results found";
+
     // Http Status 400
     String VALIDATION_FAILED = "Validation failed";
     String DUPLICATE_USERNAME = "Duplicate username";

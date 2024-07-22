@@ -49,7 +49,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/user").hasRole("USER")
 //                        .requestMatchers("/admin").hasRole("ADMIN")
 //                        .requestMatchers(HttpMethod.GET, "/api/v1/post/{postId:\\d+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/post/{id}", "/api/v1/posts").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/post/{id}", "/api/v1/posts", "/api/v1/post/search").permitAll()
                         .requestMatchers("/api/v1/post/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
