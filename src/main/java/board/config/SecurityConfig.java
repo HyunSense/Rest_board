@@ -45,11 +45,13 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/posts/**").hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers("/posts/**").hasAnyRole("USER", "ADMIN")
 //                        .requestMatchers("/user").hasRole("USER")
 //                        .requestMatchers("/admin").hasRole("ADMIN")
 //                        .requestMatchers(HttpMethod.GET, "/api/v1/post/{postId:\\d+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/post/{id}", "/api/v1/posts", "/api/v1/post/search", "/api/v1/post/{boardId}/comment-list").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/post/{id}", "/api/v1/posts", "/api/v1/post/search", "/api/v1/post/{boardId}/comment-list").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/v1/post/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())

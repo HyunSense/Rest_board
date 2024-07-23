@@ -32,6 +32,12 @@
         where id = #{id}
     </update>
 
+    <update id="updateLikesCountBoard">
+        update board
+        set likes_count = #{likesCount}
+        where id = #{id}
+    </update>
+
     <select id="findAllByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
         select id,
                member_id,
@@ -39,6 +45,7 @@
                content,
                view_count,
                comment_count,
+               likes_count,
                created_at,
                updated_at,
                is_deleted
@@ -52,8 +59,9 @@
                B.title,
                B.content,
                M.username as author,
-               view_count,
-               comment_count,
+               B.view_count,
+               B.comment_count,
+               B.likes_count,
                B.created_at,
                B.updated_at
         from board B inner join member M
@@ -68,6 +76,7 @@
                content,
                view_count,
                comment_count,
+               likes_count,
                created_at,
                updated_at,
                is_deleted
@@ -82,6 +91,7 @@
                M.username as author,
                B.view_count,
                B.comment_count,
+               B.likes_count,
                B.created_at,
                B.updated_at
         from board B inner join member M
@@ -96,7 +106,7 @@
     </delete>
 
     <!-- COMMENT -->
-    <insert id="saveComment" parameterType="board.entity.Comment">
+    <insert id="saveCommentBoard" parameterType="board.entity.Comment">
         insert into comment
         (
          member_id,
@@ -106,7 +116,7 @@
         values (#{memberId}, #{boardId}, #{content})
     </insert>
 
-    <select id="findCommentById" resultType="board.entity.Comment">
+    <select id="findCommentBoardById" resultType="board.entity.Comment">
         select id,
                member_id,
                board_id,
@@ -121,11 +131,11 @@
         select count(board_id) from comment where board_id = #{boardId} and is_deleted = 0;
     </select>
 
-    <delete id="deleteCommentById" parameterType="java.lang.Long">
+    <delete id="deleteCommentBoardById" parameterType="java.lang.Long">
         update comment set is_deleted = 1 where id = #{id} and board_id = #{boardId}
     </delete>
 
-    <delete id="deleteBoardCommentAllByBoardId" parameterType="java.lang.Long">
+    <delete id="deleteCommentBoardAllByBoardId" parameterType="java.lang.Long">
         update comment set is_deleted = 1 where board_id = #{boardId}
     </delete>
 
@@ -166,4 +176,25 @@
         where board_id = #{boardId}
           and is_deleted = 0
     </select>
+
+    <insert id="saveLikesBoard" parameterType="board.entity.Likes">
+        insert into likes
+        (
+         member_id,
+         board_id
+        )
+        values (#{memberId}, #{boardId})
+    </insert>
+
+    <select id="findLikesByMemberIdAndBoardId" resultType="board.entity.Likes">
+        select member_id, board_id
+        from likes
+        where member_id = #{memberId} and board_id = #{boardId}
+    </select>
+
+    <delete id="deleteLikesBoard" parameterType="board.entity.Likes">
+        delete from likes
+        where member_id = #{memberId} and board_id = #{boardId}
+    </delete>
+
 </mapper>

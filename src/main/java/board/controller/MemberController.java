@@ -3,6 +3,7 @@ package board.controller;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.auth.SignUpResponseDto;
 import board.service.MemberService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "Member", description = "Member API")
 public class MemberController {
 
     private final MemberService memberService;

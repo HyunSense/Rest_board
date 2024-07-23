@@ -19,4 +19,6 @@ public interface BoardService {
 
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardId);
 
+    ResponseEntity<? super GetLikesResponseDto> toggleLikes(Long memberId, Long boardId);
+
 }

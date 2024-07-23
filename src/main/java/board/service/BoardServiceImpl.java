@@ -5,6 +5,7 @@ import board.dto.response.*;
 import board.dto.response.board.*;
 import board.entity.Board;
 import board.entity.Comment;
+import board.entity.Likes;
 import board.mapper.BoardMapper;
 import board.mapper.resultset.BoardResultSet;
 import board.mapper.resultset.CommentListResultSet;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -164,7 +164,7 @@ public class BoardServiceImpl implements BoardService {
 
             int count = boardMapper.countCommentByBoardId(id);
             if (count > 0) {
-                boardMapper.deleteBoardCommentAllByBoardId(id);
+                boardMapper.deleteCommentBoardAllByBoardId(id);
             }
 
             boardMapper.deleteBoardById(id);
@@ -199,7 +199,7 @@ public class BoardServiceImpl implements BoardService {
                     .content(content)
                     .build();
 
-            boardMapper.saveComment(comment);
+            boardMapper.saveCommentBoard(comment);
 
         } catch (Exception e) {
             log.warn("createComment exception = ", e);
@@ -219,7 +219,7 @@ public class BoardServiceImpl implements BoardService {
                 return DeleteCommentResponseDto.notExistBoard();
             }
 
-            Comment comment = boardMapper.findCommentById(id);
+            Comment comment = boardMapper.findCommentBoardById(id);
             if (comment == null) {
                 return DeleteCommentResponseDto.notExistComment();
             }
@@ -230,7 +230,7 @@ public class BoardServiceImpl implements BoardService {
                 return DeleteCommentResponseDto.notPermission();
             }
 
-            boardMapper.deleteCommentById(boardId, id);
+            boardMapper.deleteCommentBoardById(boardId, id);
 
             board.decreaseComment();
             boardMapper.updateCommentCountBoard(board);
@@ -294,5 +294,45 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return GetCommentListResponseDto.success(commentList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetLikesResponseDto> toggleLikes(Long memberId, Long boardId) {
+
+        try {
+
+            Board board = boardMapper.findBoardById(boardId);
+            if (board == null) {
+                return GetLikesResponseDto.notExistBoard();
+            }
+
+            Likes findLikes = boardMapper.findLikesByMemberIdAndBoardId(memberId, boardId);
+            log.info("findLikes = {}", findLikes);
+
+            if (findLikes == null) {
+
+                Likes likes = Likes.builder()
+                        .memberId(memberId)
+                        .boardId(boardId)
+                        .build();
+                boardMapper.saveLikesBoard(likes);
+                board.increaseLikes();
+                log.info("after increase = {}", board);
+            } else {
+                log.info("else findLikes = {}", findLikes);
+                boardMapper.deleteLikesBoard(findLikes);
+                board.decreaseLikes();
+                log.info("after decrease = {}", board);
+
+            }
+
+            boardMapper.updateLikesCountBoard(board);
+
+        } catch (Exception e) {
+            log.warn("toggleLikes exception = ", e);
+            return ResponseDto.databaseError();
+        }
+
+        return GetLikesResponseDto.success();
     }
 }

@@ -18,6 +18,7 @@ create table board
     content      varchar(5000)                   null,
     view_count   bigint default 0                not null,
     comment_count int default 0                  not null,
+    likes_count   int default 0                  not null,
     created_at   datetime default current_timestamp      not null,
     updated_at   datetime default current_timestamp on update current_timestamp not null,
     is_deleted   tinyint default 0               not null,
@@ -42,8 +43,10 @@ create table comment
 
 create table likes
 (
-    member_id varchar(50) not null,
+    member_id bigint not null,
     board_id bigint      not null,
     created_at datetime default current_timestamp not null,
-    primary key (member_id, board_id)
+    primary key (member_id, board_id),
+    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (board_id) REFERENCES board(id)
 );

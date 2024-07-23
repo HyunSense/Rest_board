@@ -2,6 +2,7 @@ package board.mapper;
 
 import board.entity.Board;
 import board.entity.Comment;
+import board.entity.Likes;
 import board.mapper.resultset.BoardResultSet;
 import board.mapper.resultset.CommentListResultSet;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
 
+    // ----------------- Board -----------------
     void saveBoard(Board board);
 
     Board findAllByMemberId(Long memberId);
@@ -25,21 +27,34 @@ public interface BoardMapper {
 
     void updateCommentCountBoard(Board board);
 
+    void updateLikesCountBoard(Board board);
+
     void updateBoard(Board board);
 
     void deleteBoardById(Long id);
 
-    Comment findCommentById(Long id);
+    // ----------------- Comment -----------------
+
+    Comment findCommentBoardById(Long id);
 
     int countCommentByBoardId(Long boardId);
 
-    void saveComment(Comment comment);
+    void saveCommentBoard(Comment comment);
 
-    void deleteCommentById(Long boardId, Long id);
+    void deleteCommentBoardById(Long boardId, Long id);
 
-    void deleteBoardCommentAllByBoardId(Long boardId);
+    void deleteCommentBoardAllByBoardId(Long boardId);
+
+    // ----------------- Search Board -----------------
 
     List<BoardResultSet> findBoardByTypeAndKeyword(String type, String keyword);
 
     List<CommentListResultSet> findAllCommentByBoardId(Long boardId);
+
+    // ----------------- likes -----------------
+
+    void saveLikesBoard(Likes likes);
+    Likes findLikesByMemberIdAndBoardId(Long memberId, Long boardId);
+    void deleteLikesBoard(Likes likes);
+
 }

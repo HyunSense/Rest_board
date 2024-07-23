@@ -16,8 +16,9 @@ public class Board {
     private Long memberId;
     private String title;
     private String content;
-    private Long viewCount;
+    private long viewCount;
     private int commentCount;
+    private int likesCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int isDeleted;
@@ -37,5 +38,13 @@ public class Board {
 
     public void decreaseComment() {
         this.commentCount--;
+    }
+
+    public void increaseLikes(){
+        this.likesCount++;
+    }
+
+    public void decreaseLikes() {
+        this.likesCount--;
     }
 }

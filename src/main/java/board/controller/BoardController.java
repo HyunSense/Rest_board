@@ -4,6 +4,7 @@ import board.config.auth.PrincipalDetails;
 import board.dto.request.board.*;
 import board.dto.response.board.*;
 import board.service.BoardService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +13,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@Tag(name = "Board", description = "Board API")
 public class BoardController {
 
     private final BoardService boardService;
@@ -98,5 +100,14 @@ public class BoardController {
             @PathVariable Long id) {
 
         return boardService.deleteComment(principalDetails.getId(), boardId, id);
+    }
+
+    //좋아요 토글
+    @GetMapping("/post/{boardId}/likes")
+    public ResponseEntity<? super GetLikesResponseDto> toggleLikes(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable Long boardId) {
+
+        return boardService.toggleLikes(principalDetails.getId(), boardId);
     }
 }

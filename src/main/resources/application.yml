@@ -27,4 +27,9 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/**/*.xml
 
-
+springdoc:
+  packages-to-scan: board
+  default-produces-media-type: application/json;charset=UTF-8
+  default-consumes-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui.html

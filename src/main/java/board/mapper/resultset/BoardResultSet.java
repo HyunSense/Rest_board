@@ -11,8 +11,9 @@ public class BoardResultSet {
     private String title;
     private String content;
     private String author;
-    private Long viewCount;
+    private long viewCount;
     private int commentCount;
+    private int likesCount;
     private String createdAt;
     private String updatedAt;
 
