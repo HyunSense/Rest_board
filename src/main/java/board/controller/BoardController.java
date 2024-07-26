@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@Tag(name = "Board", description = "Board API")
+//@Tag(name = "Board", description = "Board API")
 public class BoardController {
 
     private final BoardService boardService;

@@ -7,6 +7,7 @@ import lombok.ToString;
 @ToString
 public class CommentListResultSet {
 
+    private Long id;
     private String username;
     private String content;
     private String createdAt;

@@ -4,6 +4,7 @@
 <mapper namespace="board.mapper.BoardMapper">
 
     <!-- BOARD -->
+<!--    <insert id="saveBoard" parameterType="board.entity.Board" useGeneratedKeys="true" keyProperty="id">-->
     <insert id="saveBoard" parameterType="board.entity.Board">
         insert into board
             (
@@ -101,7 +102,6 @@
     </select>
 
     <delete id="deleteBoardById" parameterType="java.lang.Long">
-#         delete from board where id = #{id}
         update board set is_deleted = 1 where id = #{id}
     </delete>
 
@@ -116,7 +116,7 @@
         values (#{memberId}, #{boardId}, #{content})
     </insert>
 
-    <select id="findCommentBoardById" resultType="board.entity.Comment">
+    <select id="findCommentById" resultType="board.entity.Comment">
         select id,
                member_id,
                board_id,
@@ -161,13 +161,17 @@
                 <when test="type == 'content'">
                     and B.content like concat('%', #{keyword}, '%')
                 </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
             </choose>
             and B.is_deleted = 0
         </where>
     </select>
 
     <select id="findAllCommentByBoardId" resultType="board.mapper.resultset.CommentListResultSet">
-        select M.username as username,
+        select C.id,
+               M.username as username,
                C.content,
                C.created_at
         from comment C

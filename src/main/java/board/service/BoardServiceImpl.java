@@ -219,7 +219,7 @@ public class BoardServiceImpl implements BoardService {
                 return DeleteCommentResponseDto.notExistBoard();
             }
 
-            Comment comment = boardMapper.findCommentBoardById(id);
+            Comment comment = boardMapper.findCommentById(id);
             if (comment == null) {
                 return DeleteCommentResponseDto.notExistComment();
             }

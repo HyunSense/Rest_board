@@ -16,7 +16,7 @@
 
     </insert>
 
-    <select id="findByUserName" parameterType="java.lang.String" resultType="board.entity.Member">
+    <select id="findByUsername" parameterType="java.lang.String" resultType="board.entity.Member">
         select id,
                username,
                password,
@@ -30,13 +30,13 @@
     </select>
 
     <select id="existsByUsername" resultType="java.lang.Boolean">
-        select if(count(*) = 1, 1, 0)
+        select case when count(*) = 1 then 1 else 0 end
         from member
         where username = #{username}
     </select>
 
     <select id="existsByEmail" resultType="java.lang.Boolean">
-        select if(count(*) = 1, 1, 0)
+        select case when count(*) = 1 then 1 else 0 end
         from member
         where email = #{email}
     </select>

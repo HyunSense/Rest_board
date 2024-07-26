@@ -22,7 +22,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         log.info("PrincipalDetailsService.loadUserByUsername");
 
 
-        Member member = userMapper.findByUserName(username);
+        Member member = userMapper.findByUsername(username);
         log.info("member = {}", member);
 
         if (member == null) {

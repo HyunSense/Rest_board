@@ -1,16 +1,16 @@
-insert into member (username, password, name, email, role)
-values
-    ('hyunsense', '1234', 'jaehoon', 'jaehoon1022@naver.com', 'ROLE_USER'),
-    ('jaehoon1022', '1234', 'hyun', 'hyun@naver.com', 'ROLE_USER');
+-- insert into member (username, password, name, email, role)
+-- values
+    -- ('hyunsense', '1234', 'jaehoon', 'jaehoon1022@naver.com', 'ROLE_USER'),
+    -- ('jaehoon1022', '1234', 'hyun', 'hyun@naver.com', 'ROLE_USER');
 
 
-insert into board (member_id, title, content)
-values
-    (1, 'test01', '내용1'),
-    (2, 'test02', '내용1'),
-    (2, '한글테스트용제목1', '내용1'),
-    (1, '한글 테스트용제목2', '내용2'),
-    (1, '한글 테스트용제목3', '내용3');
+-- insert into board (member_id, title, content)
+-- values
+-- (1, 'test01', '내용1'),
+-- (2, 'test02', '내용1'),
+-- (2, '한글테스트용제목1', '내용1'),
+-- (1, '한글 테스트용제목2', '내용2'),
+-- (1, '한글 테스트용제목3', '내용3');
 
 
 

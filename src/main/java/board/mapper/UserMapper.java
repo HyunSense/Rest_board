@@ -9,7 +9,7 @@ public interface UserMapper {
 
     void save(Member member);
 
-    Member findByUserName(String username);
+    Member findByUsername(String username);
 
     Boolean existsByEmail(String email);
     Boolean existsByUsername(String username);

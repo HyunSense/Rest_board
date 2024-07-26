@@ -15,7 +15,7 @@ public interface BoardMapper {
     // ----------------- Board -----------------
     void saveBoard(Board board);
 
-    Board findAllByMemberId(Long memberId);
+    List<Board> findAllByMemberId(Long memberId);
 
     Board findBoardById(Long id);
 
@@ -35,21 +35,18 @@ public interface BoardMapper {
 
     // ----------------- Comment -----------------
 
-    Comment findCommentBoardById(Long id);
-
+    Comment findCommentById(Long id);
     int countCommentByBoardId(Long boardId);
-
     void saveCommentBoard(Comment comment);
 
     void deleteCommentBoardById(Long boardId, Long id);
 
     void deleteCommentBoardAllByBoardId(Long boardId);
+    List<CommentListResultSet> findAllCommentByBoardId(Long boardId);
 
     // ----------------- Search Board -----------------
 
     List<BoardResultSet> findBoardByTypeAndKeyword(String type, String keyword);
-
-    List<CommentListResultSet> findAllCommentByBoardId(Long boardId);
 
     // ----------------- likes -----------------
 
