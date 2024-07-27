@@ -12,16 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,9 +36,9 @@ class BoardServiceTest {
     @Mock
     private Comment comment;
     @Mock
-    private BoardResultSet boardResultSet;
+    private BoardResultSet mockBoardResultSet;
     @Mock
-    private List<BoardResultSet> boardResultSetList;
+    private List<BoardResultSet> MockBoardResultSetList;
     @InjectMocks
     private BoardServiceImpl boardService;
 
@@ -127,7 +123,7 @@ class BoardServiceTest {
     @DisplayName("게시글 단일 조회 성공")
     void getBoardByIdSuccess() {
         //given
-        given(boardMapper.getBoardById(boardId)).willReturn(boardResultSet);
+        given(boardMapper.getBoardById(boardId)).willReturn(mockBoardResultSet);
         given(boardMapper.findBoardById(boardId)).willReturn(board);
         willDoNothing().given(board).increaseViewCount();
         willDoNothing().given(boardMapper).updateViewCountBoard(board);
@@ -546,17 +542,43 @@ class BoardServiceTest {
         verify(comment).getMemberId();
     }
 
-//    @Test
-//    @DisplayName("검색한 게시글 조회 성공")
+    @Test
+    @DisplayName("검색한 게시글 조회 성공")
     void getSearchBoardSuccess() {
         //given
+        BoardResultSet resultSet1 = BoardResultSet.builder()
+                .id(1L)
+                .title("First title")
+                .content("First content")
+                .author("Author")
+                .viewCount(0)
+                .commentCount(0)
+                .likesCount(0)
+                .createdAt("2024-07-27 02:16:33")
+                .updatedAt("2024-07-27 02:16:33")
+                .build();
+
+        BoardResultSet resultSet2 = BoardResultSet.builder()
+                .id(2L)
+                .title("Second title")
+                .content("Second content")
+                .author("Author")
+                .viewCount(0)
+                .commentCount(0)
+                .likesCount(0)
+                .createdAt("2024-07-28 02:17:33")
+                .updatedAt("2024-07-28 02:17:33")
+                .build();
+
         String successType = "author";
-        String successKeyword = "authorSuccess";
+        String expectedType = "username";
+        String successKeyword = "Author";
         getSearchBoardListRequestDto.setType(successType);
         getSearchBoardListRequestDto.setKeyword(successKeyword);
 
-        List<BoardResultSet> tempBoardResultSetList = List.of(boardResultSet);
-        given(boardMapper.findBoardByTypeAndKeyword(successType, successKeyword)).willReturn(boardResultSetList);
+        List<BoardResultSet> resultSetList = List.of(resultSet1, resultSet2);
+
+        given(boardMapper.findBoardByTypeAndKeyword(expectedType, successKeyword)).willReturn(resultSetList);
 
 
         //when
@@ -566,4 +588,30 @@ class BoardServiceTest {
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    @DisplayName("검색한 게시글 0건 조회")
+    void getSearchBoardSuccessNoCount() {
+        //given
+        String successType = "author";
+        String expectedType = "username";
+        String successKeyword = "NotExistResult";
+        getSearchBoardListRequestDto.setType(successType);
+        getSearchBoardListRequestDto.setKeyword(successKeyword);
+
+        List<BoardResultSet> resultSetList = List.of(mockBoardResultSet);
+        given(boardMapper.findBoardByTypeAndKeyword(expectedType, successKeyword)).willReturn(resultSetList);
+
+        //when
+        ResponseEntity<? super GetSearchBoardListResponseDto> response =
+                boardService.getSearchBoard(getSearchBoardListRequestDto);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        GetSearchBoardListResponseDto responseBody = (GetSearchBoardListResponseDto) response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getBoardList()).hasSize(1);
+    }
+
+
 }
