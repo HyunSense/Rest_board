@@ -262,6 +262,7 @@ public class BoardServiceImpl implements BoardService {
 
             searchedList = boardMapper.findBoardByTypeAndKeyword(type, keyword);
 
+
 //            if (searchedList == null || searchedList.isEmpty()) {
 //                return GetSearchBoardListResponseDto.noResult();
 //            }
