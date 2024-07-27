@@ -4,7 +4,7 @@ import board.entity.Board;
 import board.entity.Comment;
 import board.entity.Likes;
 import board.mapper.resultset.BoardResultSet;
-import board.mapper.resultset.CommentListResultSet;
+import board.mapper.resultset.CommentResultSet;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public interface BoardMapper {
     void deleteCommentBoardById(Long boardId, Long id);
 
     void deleteCommentBoardAllByBoardId(Long boardId);
-    List<CommentListResultSet> findAllCommentByBoardId(Long boardId);
+    List<CommentResultSet> findAllCommentByBoardId(Long boardId);
 
     // ----------------- Search Board -----------------
 

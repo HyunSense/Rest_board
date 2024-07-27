@@ -5,7 +5,7 @@ import board.entity.Comment;
 import board.entity.Likes;
 import board.entity.Member;
 import board.mapper.resultset.BoardResultSet;
-import board.mapper.resultset.CommentListResultSet;
+import board.mapper.resultset.CommentResultSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -632,12 +632,12 @@ public class BoardMapperTest {
 
         //when
         boardMapper.saveCommentBoard(comment);
-        List<CommentListResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
+        List<CommentResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
 
         //then
         assertThat(commentList).hasSize(1);
 
-        CommentListResultSet findComment = commentList.get(0);
+        CommentResultSet findComment = commentList.get(0);
         assertThat(findComment.getContent()).isEqualTo("test comment");
     }
 
@@ -648,7 +648,7 @@ public class BoardMapperTest {
         Long nonExistBoardId = 9999L;
 
         //when
-        List<CommentListResultSet> resultList = boardMapper.findAllCommentByBoardId(nonExistBoardId);
+        List<CommentResultSet> resultList = boardMapper.findAllCommentByBoardId(nonExistBoardId);
 
         //then
         assertThat(resultList).isEmpty();
@@ -731,8 +731,8 @@ public class BoardMapperTest {
                 .build();
 
         boardMapper.saveCommentBoard(comment);
-        List<CommentListResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
-        CommentListResultSet findComment = commentList.get(0);
+        List<CommentResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
+        CommentResultSet findComment = commentList.get(0);
 
         //when
         boardMapper.deleteCommentBoardById(findBoard.getId(), findComment.getId());
@@ -781,7 +781,7 @@ public class BoardMapperTest {
 
         //when
         boardMapper.deleteCommentBoardAllByBoardId(findBoard.getId());
-        List<CommentListResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
+        List<CommentResultSet> commentList = boardMapper.findAllCommentByBoardId(findBoard.getId());
 
         //then
         assertThat(commentList).isEmpty();

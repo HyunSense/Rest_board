@@ -8,7 +8,7 @@ import board.entity.Comment;
 import board.entity.Likes;
 import board.mapper.BoardMapper;
 import board.mapper.resultset.BoardResultSet;
-import board.mapper.resultset.CommentListResultSet;
+import board.mapper.resultset.CommentResultSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -261,13 +261,8 @@ public class BoardServiceImpl implements BoardService {
         try {
 
             searchedList = boardMapper.findBoardByTypeAndKeyword(type, keyword);
-
-
-//            if (searchedList == null || searchedList.isEmpty()) {
-//                return GetSearchBoardListResponseDto.noResult();
-//            }
-
             count = searchedList.size();
+
         } catch (Exception e) {
             log.warn("getSearchBoard exception e = ", e);
             return ResponseDto.databaseError();
@@ -279,7 +274,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardId) {
 
-        List<CommentListResultSet> commentList = null;
+        List<CommentResultSet> commentList = null;
 
         try {
             Board board = boardMapper.findBoardById(boardId);

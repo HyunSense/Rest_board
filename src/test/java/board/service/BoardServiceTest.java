@@ -4,12 +4,15 @@ import board.dto.request.board.*;
 import board.dto.response.board.*;
 import board.entity.Board;
 import board.entity.Comment;
+import board.entity.Likes;
 import board.mapper.BoardMapper;
 import board.mapper.resultset.BoardResultSet;
+import board.mapper.resultset.CommentResultSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -35,6 +38,8 @@ class BoardServiceTest {
     private Board board;
     @Mock
     private Comment comment;
+    @Mock
+    private Likes likes;
     @Mock
     private BoardResultSet mockBoardResultSet;
     @Mock
@@ -610,8 +615,165 @@ class BoardServiceTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         GetSearchBoardListResponseDto responseBody = (GetSearchBoardListResponseDto) response.getBody();
         assertThat(responseBody).isNotNull();
+        // 빈 배열조회
         assertThat(responseBody.getBoardList()).hasSize(1);
     }
 
+    @Test
+    @DisplayName("검색 게시글 조회시 데이터베이스 에러")
+    void getSearchBoardDatabaseError() {
+        //given
+        String type = "author";
+        String keyword = "keyword";
 
+        getSearchBoardListRequestDto.setType(type);
+        getSearchBoardListRequestDto.setKeyword(keyword);
+        doThrow(new RuntimeException()).when(boardMapper).findBoardByTypeAndKeyword(type, keyword);
+
+        //when
+        ResponseEntity<? super GetSearchBoardListResponseDto> response =
+                boardService.getSearchBoard(getSearchBoardListRequestDto);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    @DisplayName("댓글 조회 성공")
+    void getCommentListSuccess() {
+        //given
+        CommentResultSet commentResultSet = CommentResultSet.builder()
+                .id(1L)
+                .username("username")
+                .content("content")
+                .createdAt("2023-12-12 13:01:33")
+                .build();
+
+        List<CommentResultSet> commentResultSetList = List.of(commentResultSet);
+        given(boardMapper.findBoardById(boardId)).willReturn(board);
+        given(boardMapper.findAllCommentByBoardId(boardId)).willReturn(commentResultSetList);
+
+        //when
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(boardMapper).findBoardById(boardId);
+        verify(boardMapper).findAllCommentByBoardId(boardId);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 게시글에서 댓글 조회 시도")
+    void getCommentListNotExistBoard() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(null);
+
+        //when
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        verify(boardMapper).findBoardById(boardId);
+    }
+
+    @Test
+    @DisplayName("댓글 조회시 데이터베이스 에러")
+    void getCommentListDatabaseError() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(board);
+        doThrow(new RuntimeException()).when(boardMapper).findAllCommentByBoardId(boardId);
+
+        //when
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        verify(boardMapper).findBoardById(boardId);
+        verify(boardMapper).findAllCommentByBoardId(boardId);
+    }
+
+    @Test
+    @DisplayName("좋아요 존재할때 삭제 성공")
+    void toggleLikesSuccessDelete() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(board);
+        given(boardMapper.findLikesByMemberIdAndBoardId(memberId, boardId)).willReturn(likes);
+        willDoNothing().given(boardMapper).deleteLikesBoard(likes);
+        willDoNothing().given(board).decreaseLikes();
+        willDoNothing().given(boardMapper).updateLikesCountBoard(board);
+
+        //when
+        ResponseEntity<? super GetLikesResponseDto> response =
+                boardService.toggleLikes(memberId, boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(boardMapper).findBoardById(boardId);
+        verify(boardMapper).findLikesByMemberIdAndBoardId(memberId, boardId);
+        verify(boardMapper).deleteLikesBoard(likes);
+        verify(board).decreaseLikes();
+        verify(boardMapper).updateLikesCountBoard(board);
+    }
+
+    @Test
+    @DisplayName("좋아요 존재하지 않을때 추가 성공")
+    void toggleLikesSuccessSave() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(board);
+        given(boardMapper.findLikesByMemberIdAndBoardId(memberId, boardId)).willReturn(null);
+
+
+        willDoNothing().given(boardMapper).saveLikesBoard(any(Likes.class));
+        willDoNothing().given(board).increaseLikes();
+        willDoNothing().given(boardMapper).updateLikesCountBoard(board);
+
+        //when
+        ResponseEntity<? super GetLikesResponseDto> response =
+                boardService.toggleLikes(memberId, boardId);
+
+        //then
+        ArgumentCaptor<Likes> likesCaptor = ArgumentCaptor.forClass(Likes.class);
+        verify(boardMapper).saveLikesBoard(likesCaptor.capture());
+        Likes capturedLikes  = likesCaptor.getValue();
+        assertThat(capturedLikes.getMemberId()).isEqualTo(memberId);
+        assertThat(capturedLikes.getBoardId()).isEqualTo(boardId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(boardMapper).findBoardById(boardId);
+        verify(boardMapper).findLikesByMemberIdAndBoardId(memberId, boardId);
+        verify(boardMapper).saveLikesBoard(any(Likes.class));
+        verify(board).increaseLikes();
+        verify(boardMapper).updateLikesCountBoard(board);
+    }
+
+    @Test
+    @DisplayName("게시글 존재하지 않을때 좋아요 시도")
+    void toggleLikesNotExistsBoard() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(null);
+
+        //when
+        ResponseEntity<? super GetLikesResponseDto> response =
+                boardService.toggleLikes(memberId, boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        verify(boardMapper).findBoardById(boardId);
+    }
+
+    @Test
+    @DisplayName("좋아요 데이터베이스 에러")
+    void toggleLikesDatabaseError() {
+        //given
+        given(boardMapper.findBoardById(boardId)).willReturn(board);
+        doThrow(new RuntimeException()).when(boardMapper).findLikesByMemberIdAndBoardId(memberId, boardId);
+
+        //when
+        ResponseEntity<? super GetLikesResponseDto> response =
+                boardService.toggleLikes(memberId, boardId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        verify(boardMapper).findBoardById(boardId);
+    }
 }

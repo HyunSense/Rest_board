@@ -3,7 +3,7 @@ package board.dto.response.board;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.response.ResponseDto;
-import board.mapper.resultset.CommentListResultSet;
+import board.mapper.resultset.CommentResultSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -15,14 +15,14 @@ import java.util.List;
 @Setter
 public class GetCommentListResponseDto extends ResponseDto {
 
-    private List<CommentListResultSet> commentList;
+    private List<CommentResultSet> commentList;
 
-    private GetCommentListResponseDto(List<CommentListResultSet> commentList) {
+    private GetCommentListResponseDto(List<CommentResultSet> commentList) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.commentList = commentList;
     }
 
-    public static ResponseEntity<GetCommentListResponseDto> success(List<CommentListResultSet> commentList) {
+    public static ResponseEntity<GetCommentListResponseDto> success(List<CommentResultSet> commentList) {
 
         GetCommentListResponseDto responseBody = new GetCommentListResponseDto(commentList);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
@@ -31,6 +31,6 @@ public class GetCommentListResponseDto extends ResponseDto {
     public static ResponseEntity<ResponseDto> notExistBoard() {
 
         ResponseDto responseDto = new ResponseDto(ResponseCode.NOT_EXIST_BOARD, ResponseMessage.NOT_EXIST_BOARD);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
     }
 }

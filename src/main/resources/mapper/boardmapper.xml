@@ -169,7 +169,7 @@
         </where>
     </select>
 
-    <select id="findAllCommentByBoardId" resultType="board.mapper.resultset.CommentListResultSet">
+    <select id="findAllCommentByBoardId" resultType="board.mapper.resultset.CommentResultSet">
         select C.id,
                M.username as username,
                C.content,
