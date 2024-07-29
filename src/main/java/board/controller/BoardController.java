@@ -44,7 +44,7 @@ public class BoardController {
 
     // 글 검색 조회
     @GetMapping("/post/search")
-    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardAll(@ModelAttribute GetSearchBoardListRequestDto dto) {
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardAll(@ModelAttribute @Valid GetSearchBoardListRequestDto dto) {
 
         return boardService.getSearchBoard(dto);
     }

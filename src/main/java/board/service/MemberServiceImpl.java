@@ -21,7 +21,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final String ROLE_USER = "ROLE_USER";
 
 
     @Override

@@ -72,8 +72,6 @@ public class JWTUtil {
 
     public String createJwt(Long id, String username, String role, Long expiredMs) {
 
-//        log.info("expired = {}", new Date(System.currentTimeMillis() + expiredMs));
-
         return JWT.create()
                 .withSubject("JWT토큰")
                 .withClaim("id", id)

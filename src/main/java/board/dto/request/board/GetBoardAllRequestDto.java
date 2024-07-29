@@ -3,12 +3,14 @@ package board.dto.request.board;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 public class GetBoardAllRequestDto {
 
