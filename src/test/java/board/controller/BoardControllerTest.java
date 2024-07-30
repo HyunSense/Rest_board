@@ -647,5 +647,31 @@ public class BoardControllerTest {
         assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getLikesCount()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("게시글에 좋아요 삭제 성공")
+    void toggleLikesSuccessDeleteLikes() throws Exception{
+        //given
+        Long memberId = 1L;
+        Long boardId = 1L;
+        boardService.toggleLikes(memberId, boardId);
+
+        //when
+        mockMvc.perform(
+                        get("/api/v1/post/" + boardId + "/likes")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andDo(print());
+
+        //then
+        ResponseEntity<? super GetBoardResponseDto> response =
+                boardService.getBoardById(1L);
+        GetBoardResponseDto responseBody = (GetBoardResponseDto) response.getBody();
+        assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getLikesCount()).isEqualTo(0);
+    }
 }
 
