@@ -4,11 +4,13 @@ import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.request.board.*;
+import board.dto.response.board.GetBoardResponseDto;
 import board.jwt.JWTUtil;
 import board.mapper.AutoIncrementMapper;
 import board.service.BoardService;
 import board.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -573,7 +577,6 @@ public class BoardControllerTest {
                         get("/api/v1/post/"+ boardId + "/comment-list")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
-//                                .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
@@ -619,6 +622,30 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
                 .andExpect(jsonPath("$.count").value(0))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글에 좋아요 추가 성공")
+    void toggleLikesSuccess() throws Exception{
+        //given
+        Long boardId = 1L;
+
+        //when
+        mockMvc.perform(
+                        get("/api/v1/post/" + boardId + "/likes")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andDo(print());
+
+        //then
+        ResponseEntity<? super GetBoardResponseDto> response =
+                boardService.getBoardById(1L);
+        GetBoardResponseDto responseBody = (GetBoardResponseDto) response.getBody();
+        assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getLikesCount()).isEqualTo(1);
     }
 }
 

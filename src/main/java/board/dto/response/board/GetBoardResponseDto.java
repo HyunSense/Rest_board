@@ -21,6 +21,7 @@ public class GetBoardResponseDto extends ResponseDto {
     private String author;
     private Long viewCount;
     private int commentCount;
+    private int likesCount;
     private String createdAt;
     private String updatedAt;
 
@@ -33,6 +34,7 @@ public class GetBoardResponseDto extends ResponseDto {
         this.author = resultSet.getAuthor();
         this.viewCount = resultSet.getViewCount();
         this.commentCount = resultSet.getCommentCount();
+        this.likesCount = resultSet.getLikesCount();
         this.createdAt = resultSet.getCreatedAt();
         this.updatedAt = resultSet.getUpdatedAt();
     }
