@@ -15,16 +15,18 @@ import java.util.List;
 @Setter
 public class GetCommentListResponseDto extends ResponseDto {
 
+    private int count;
     private List<CommentResultSet> commentList;
 
-    private GetCommentListResponseDto(List<CommentResultSet> commentList) {
+    private GetCommentListResponseDto(List<CommentResultSet> commentList, int count) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+        this.count = count;
         this.commentList = commentList;
     }
 
-    public static ResponseEntity<GetCommentListResponseDto> success(List<CommentResultSet> commentList) {
+    public static ResponseEntity<GetCommentListResponseDto> success(List<CommentResultSet> commentList, int count) {
 
-        GetCommentListResponseDto responseBody = new GetCommentListResponseDto(commentList);
+        GetCommentListResponseDto responseBody = new GetCommentListResponseDto(commentList, count);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 

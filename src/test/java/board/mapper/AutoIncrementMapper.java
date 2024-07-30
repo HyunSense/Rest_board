@@ -12,4 +12,7 @@ public interface AutoIncrementMapper {
     @Update("alter table board auto_increment = 1")
     void resetBoardAutoIncrement();
 
+    @Update("alter table comment auto_increment = 1")
+    void resetCommentAutoIncrement();
+
 }

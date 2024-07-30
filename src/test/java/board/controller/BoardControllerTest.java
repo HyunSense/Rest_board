@@ -3,10 +3,7 @@ package board.controller;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.request.auth.SignUpRequestDto;
-import board.dto.request.board.GetBoardAllRequestDto;
-import board.dto.request.board.PatchBoardRequestDto;
-import board.dto.request.board.PostBoardRequestDto;
-import board.dto.request.board.PostCommentRequestDto;
+import board.dto.request.board.*;
 import board.jwt.JWTUtil;
 import board.mapper.AutoIncrementMapper;
 import board.service.BoardService;
@@ -60,6 +57,7 @@ public class BoardControllerTest {
 
         autoIncrementMapper.resetMemberAutoIncrement();
         autoIncrementMapper.resetBoardAutoIncrement();
+        autoIncrementMapper.resetCommentAutoIncrement();
 
         Long id = 1L;
         String username = "test";
@@ -80,6 +78,11 @@ public class BoardControllerTest {
         postBoardRequestDto.setContent("test content");
 
         boardService.createBoard(1L, postBoardRequestDto);
+
+        PostCommentRequestDto postCommentRequestDto = new PostCommentRequestDto();
+        postCommentRequestDto.setContent("test comment");
+
+        boardService.createComment(postCommentRequestDto, 1L, 1L);
     }
 
     @AfterEach
@@ -478,12 +481,144 @@ public class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("")
-    void deleteCommentSuccess() {
+    @DisplayName("댓글 삭제 성공")
+    void deleteCommentSuccess() throws Exception{
         //given
+        Long boardId = 1L;
+        Long commentId = 1L;
 
         //when
+        mockMvc.perform(
+                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andDo(print());
+    }
 
-        //then
+    @Test
+    @DisplayName("존재하지 않는 게시글 댓글 삭제 실패")
+    void deleteCommentFailedNotExistBoard() throws Exception{
+        //given
+        Long boardId = 999L;
+        Long commentId = 1L;
+
+        //when
+        mockMvc.perform(
+                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ResponseCode.NOT_EXIST_BOARD))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.NOT_EXIST_BOARD))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 댓글 삭제 실패")
+    void deleteCommentFailedNotExistComment() throws Exception{
+        //given
+        Long boardId = 1L;
+        Long commentId = 999L;
+
+        //when
+        mockMvc.perform(
+                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ResponseCode.NOT_EXIST_COMMENT))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.NOT_EXIST_COMMENT))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 권한 없음")
+    void deleteCommentFailedNotPermission() throws Exception{
+        //given
+        Long id = 999L;
+        String username = "notPermissionMember";
+        String role = "ROLE_USER";
+        Long expiredMs = 1000 * 60L; // 1분
+        token = jwtUtil.createJwt(id, username, role, expiredMs);
+
+        Long boardId = 1L;
+        Long commentId = 1L;
+
+        //when
+        mockMvc.perform(
+                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value(ResponseCode.PERMISSION_DENIED))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.PERMISSION_DENIED))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("해당 게시글 댓글 목록 가져오기 성공")
+    void getCommentListSuccess() throws Exception{
+        //given
+        Long boardId = 1L;
+
+        //when
+        mockMvc.perform(
+                        get("/api/v1/post/"+ boardId + "/comment-list")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON))
+//                                .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andExpect(jsonPath("$.count").value(1))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 검색 조회 성공")
+    void getSearchBoardSuccess() throws Exception{
+        //given
+        String type = "title";
+        String keyword = "test";
+
+        //when
+        mockMvc.perform(
+                        get("/api/v1/post/search")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .queryParam("type", type)
+                                .queryParam("keyword", keyword))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andExpect(jsonPath("$.count").value(1))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 검색 조회 결과 0건")
+    void getSearchBoardSuccessNoResult() throws Exception{
+        //given
+        String type = "title";
+        String keyword = "no Result";
+
+        //when
+        mockMvc.perform(
+                        get("/api/v1/post/search")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .queryParam("type", type)
+                                .queryParam("keyword", keyword))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andExpect(jsonPath("$.count").value(0))
+                .andDo(print());
     }
 }
+

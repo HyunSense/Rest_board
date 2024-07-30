@@ -275,7 +275,7 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardId) {
 
         List<CommentResultSet> commentList = null;
-
+        int count = 0;
         try {
             Board board = boardMapper.findBoardById(boardId);
             if (board == null) {
@@ -283,13 +283,14 @@ public class BoardServiceImpl implements BoardService {
             }
 
             commentList = boardMapper.findAllCommentByBoardId(boardId);
+            count = commentList.size();
 
         } catch (Exception e) {
             log.warn("getCommentList exception = ", e);
             return ResponseDto.databaseError();
         }
 
-        return GetCommentListResponseDto.success(commentList);
+        return GetCommentListResponseDto.success(commentList, count);
     }
 
     @Override
