@@ -1,0 +1,22 @@
+@startuml
+
+actor User
+participant "BoardController"
+participant "BoardService"
+participant "BoardMapper"
+participant "DataBase"
+
+User -> BoardController: POST /post
+activate BoardController
+
+BoardController -> BoardService: PostBoardDto 맵핑 및 유효성 체크
+activate BoardService
+
+BoardService -> DataBase: 게시글 저장
+
+BoardService -->> BoardController: 게시판 생성 성공
+deactivate BoardService
+BoardController -->> User: ResponseEntity Status: 200
+deactivate BoardController
+
+@enduml
