@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class BoardIntegrationTest {
+public class BoardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -455,4 +455,35 @@ public class BoardIntegrationTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("존재하지 않는 게시글에 댓글 작성 실패")
+    void createCommentFailedNotExistBoard() throws Exception{
+        //given
+        Long boardId = 999L;
+        PostCommentRequestDto postCommentRequestDto = new PostCommentRequestDto();
+        postCommentRequestDto.setContent("no board");
+
+
+        //when
+        mockMvc.perform(
+                        post("/api/v1/post/"+ boardId + "/comment")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, BEARER + token)
+                                .content(objectMapper.writeValueAsString(postCommentRequestDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ResponseCode.NOT_EXIST_BOARD))
+                .andExpect(jsonPath("$.message").value(ResponseMessage.NOT_EXIST_BOARD))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("")
+    void deleteCommentSuccess() {
+        //given
+
+        //when
+
+        //then
+    }
 }
