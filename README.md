@@ -55,7 +55,8 @@
 ![deleteBoardSequence](https://github.com/user-attachments/assets/3a6ae2f2-be1c-49d1-80d0-ef59a6462498)
 
 ## 클래스 다이어그램(수정중)
-![RestBoardClassDiagram.png](..%2F..%2F..%2FRest_board_sequencePNG%2FRestBoardClassDiagram.png)
+![RestBoardClassDiagram](https://github.com/user-attachments/assets/fb5b5e12-ee58-4193-941e-b77a2cb887ef)
+
 ## 테스트 커버리지
 ![codeCoverage](https://github.com/user-attachments/assets/2d8d8730-6b50-4b7a-ad4d-cbf68c3a7e88)
 
