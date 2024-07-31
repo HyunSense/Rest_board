@@ -6,6 +6,18 @@
 - REST API 문서화 
 - 시퀀스 다이어그램을 통해 기능별 문서화
 
+## 기술 및 라이브러리
+- JAVA 17
+- Spring Boot 3.3
+- MariaDB 11.1.2
+- h2 database 2.2 (TEST용)
+- MyBatis
+- Spring Security 6.3
+- Spring Validation
+- auth0-JWT 4.4
+- Junit5 + Mockito
+- Lombok
+
 ### 목표
 - Spring Security 의 흐름과 동작 이해하기
 - RestFul 하게 설계하기
@@ -14,7 +26,13 @@
 - REST API 명세서를 작성하기
 - 시퀀스 다이어그램 및 클래스 다이어그램을 직접 그려 문서화 하기
 
-## <a href="https://hyunsense.notion.site/REST-API-f59958d679ac45adbe96fb923c4eafb4?pvs=4">API 명세서 노션</a> , <a href="https://drive.google.com/file/d/1Rp4IJkPxKoVy4Cy0st-oMQTNiL6mtwlO/view?usp=sharing">API 명세서 PDF</a>
+
+
+### <a href="https://drive.google.com/file/d/1Rp4IJkPxKoVy4Cy0st-oMQTNiL6mtwlO/view?usp=sharing">API 명세서 PDF</a>
+### <a href="https://hyunsense.notion.site/REST-API-f59958d679ac45adbe96fb923c4eafb4?pvs=4">API 명세서 노션</a>
+
+## ERD
+![erd_capture.jpg](..%2F..%2F..%2Fvsc_erd%2Ferd_capture.jpg)
 
 ## 시퀀스 다이어그램
 
@@ -36,6 +54,8 @@
 ### 게시글 삭제 시퀀스
 ![deleteBoardSequence](https://github.com/user-attachments/assets/3a6ae2f2-be1c-49d1-80d0-ef59a6462498)
 
+## 클래스 다이어그램(수정중)
+![RestBoardClassDiagram.png](..%2F..%2F..%2FRest_board_sequencePNG%2FRestBoardClassDiagram.png)
 ## 테스트 커버리지
 ![codeCoverage](https://github.com/user-attachments/assets/2d8d8730-6b50-4b7a-ad4d-cbf68c3a7e88)
 

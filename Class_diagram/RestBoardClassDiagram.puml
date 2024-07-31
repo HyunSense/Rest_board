@@ -1,0 +1,165 @@
+@startuml
+
+package Entity {
+    class Member {
+        - id: Long
+        - username: String
+        - password: String
+        - name: String
+        - email: String
+        - role: String
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+    }
+
+    class Board {
+        - id: Long
+        - memberId: Long
+        - title: String
+        - content: String
+        - viewCount: Long
+        - commentCount: int
+        - likesCount: int
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        - isDeleted: int
+    }
+    class Comment {
+        - id: Long
+        - memberId: Long
+        - boardId: Long
+        - content: String
+        - createdAt: LocalDateTime
+        - isDeleted: int
+    }
+
+    class Likes {
+        - memberId: Long
+        - boardId: Long
+    }
+}
+
+package ResultSet{
+    class BoardResultSet {
+        - id: Long
+        - title: String
+        - author: String
+        - viewCount: Long
+        - commentCount: int
+        - likesCount: int
+        - createdAt: String
+        - updatedAt: String
+    }
+
+    class CommentResultSet {
+        - id: Long
+        - username: String
+        - content: String
+        - createdAt: String
+    }
+
+}
+
+
+
+interface MemberService {
+    + signUp(SignUpRequestDTO): ResponseEntity<? super SignUpResponseDto>
+}
+
+interface BoardService {
+
+    + postBoard(PrincipalDetails, PostBoardRequestDto)
+    + getBoard(Long)
+    + patchBoard(PatchRequestDto, PrincipalDetails, Long)
+    + deleteBoard(PrincipalDetails, Long)
+    + getBoardAll(GetBoardAllRequestDto)
+
+}
+
+package Controller {
+    class MemberController {
+        - memberService: MemberService
+
+        + signUp(SignUpRequestDTO): ResponseEntity<? super SignUpResponseDto)
+    }
+
+    class BoardController {
+        - boardService: BoardService
+
+        + postBoard(PrincipalDetails, PostBoardRequestDto)
+        + getBoard(Long)
+        + patchBoard(PatchRequestDto, PrincipalDetails, Long)
+        + deleteBoard(PrincipalDetails, Long)
+        + getBoardAll(GetBoardAllRequestDto)
+        + getSearchBoardAll(GetSearchBoardListRequestDto)
+        + getCommentList(Long)
+        + postComment(PostCommentRequestDto, PrincipalDetails, Long)
+        + deleteComment(PrincipalDetails, Long, Long)
+        + toggleLikes(PrincipalDetails, Long)
+    }
+}
+
+package Service {
+    class MemberServiceImpl {
+        - userMapper: UserMapper
+        - bCryptPasswordEncoder: BCryptPasswordEncoder
+
+        + signUp(SignUpRequestDTO): ResponseEntity<? super SignUpResponseDto>
+    }
+
+    class BoardServiceImpl {
+        - boardMapper: BoardMapper
+
+        + postBoard(PrincipalDetails, PostBoardRequestDto)
+        + getBoard(Long)
+        + patchBoard(PatchRequestDto, PrincipalDetails, Long)
+        + deleteBoard(PrincipalDetails, Long)
+        + getBoardAll(GetBoardAllRequestDto)
+        + getSearchBoard(GetSearchBoardListRequestDto)
+        + getCommentList(Long)
+        + createComment(PostCommentRequestDto)
+        + deleteComment(Long, Long, Long)
+        + toggleLikes(Long, Long)
+    }
+}
+
+
+interface UserMapper {
+    + save(Member)
+    + findByUsername(String): Member
+    + existsByUsername(String): Boolean
+    + existsByEmail(String): Boolean
+}
+
+interface BoardMapper {
+
+    + saveBoard(Board)
+    + findAllByMemberId(Long): List<Board>
+    + findBoardById(Long): Board
+    + getBoardById(Long): BoardResultSet
+    + getAllBoard(Integer, Integer): List<BoardResultSet>
+    + updateViewCountBoard(Board)
+    + updateCommentCountBoard(Board)
+    + updateLikesCountBoard(Board)
+    + updateBoard(Board)
+    + deleteBoardById(Long)
+
+}
+
+MemberController --> MemberServiceImpl
+MemberServiceImpl ..|> MemberService
+MemberServiceImpl ..> UserMapper
+UserMapper --> Member
+
+BoardServiceImpl ...|> BoardService
+
+BoardController --> BoardServiceImpl
+BoardServiceImpl ...> BoardMapper
+BoardMapper --> Board
+BoardMapper --> Comment
+BoardMapper --> Likes
+
+BoardMapper --> BoardResultSet
+BoardMapper --> CommentResultSet
+
+@enduml
