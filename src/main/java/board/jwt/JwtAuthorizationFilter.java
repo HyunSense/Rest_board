@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
-    private final JWTUtil jwtUtil;
+    private final JwtTokenService jwtTokenService;
     private final ObjectMapper objectMapper;
 //    private static final String BEARER = "Bearer ";
 
@@ -49,7 +49,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
         try {
 
-            jwtUtil.isExpired(token);
+            jwtTokenService.isExpired(token);
 
         } catch (JWTVerificationException e) {
 
@@ -58,9 +58,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
             return;
         }
 
-        Long id = jwtUtil.getId(token);
-        String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        Long id = jwtTokenService.getId(token);
+        String username = jwtTokenService.getUsername(token);
+        String role = jwtTokenService.getRole(token);
 
         Member member = Member.builder()
                 .id(id)

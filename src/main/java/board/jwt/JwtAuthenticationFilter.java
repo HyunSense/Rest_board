@@ -20,7 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,7 +30,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     // AbstractAuthenticationProcessingFilter 사용
     // addFilter 시 순서 확인
     private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
+    private final JwtTokenService jwtTokenService;
     private final ObjectMapper objectMapper;
 
     private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/v1/auth/login";
@@ -46,10 +45,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD);
 
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ObjectMapper objectMapper) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenService jwtTokenService, ObjectMapper objectMapper) {
         super(DEFAULT_LOGIN_REQUEST_MATCHER);
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenService = jwtTokenService;
         this.objectMapper = objectMapper;
     }
 
@@ -86,8 +85,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
         String role = next.getAuthority();
 
-        String token = jwtUtil.createJwt(id, username, role, EXPIRED_MS);
-        String expired = jwtUtil.getExpired(token);
+        String token = jwtTokenService.createJwt(id, username, role, EXPIRED_MS);
+        String expired = jwtTokenService.getExpired(token);
 
 
         ResponseEntity<LoginResponseDto> responseEntity = LoginResponseDto.success(token, expired);

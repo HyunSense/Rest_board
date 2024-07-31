@@ -1,7 +1,7 @@
 package board.config;
 
 import board.config.auth.CustomAuthenticationEntryPoint;
-import board.jwt.JWTUtil;
+import board.jwt.JwtTokenService;
 import board.jwt.JwtAuthenticationFilter;
 import board.jwt.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final JWTUtil jwtUtil;
+    private final JwtTokenService jwtTokenService;
     private final CorsFilter corsFilter;
     private final ObjectMapper objectMapper;
 
@@ -56,8 +56,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilter(corsFilter)
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, objectMapper), JwtAuthenticationFilter.class);
+                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenService, objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenService, objectMapper), JwtAuthenticationFilter.class);
             //TODO: AbstractAuthenticationProcessingFilter 핕터 실행 순서 확인
 
         // AuthenticationEntryPoint : 인증되지 않은 사용자가 인증이 필요한 앤드포인트로 접근할때

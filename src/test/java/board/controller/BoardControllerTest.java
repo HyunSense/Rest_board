@@ -5,7 +5,7 @@ import board.common.ResponseMessage;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.request.board.*;
 import board.dto.response.board.GetBoardResponseDto;
-import board.jwt.JWTUtil;
+import board.jwt.JwtTokenService;
 import board.mapper.AutoIncrementMapper;
 import board.service.BoardService;
 import board.service.MemberService;
@@ -51,7 +51,7 @@ public class BoardControllerTest {
     private BoardService boardService;
 
     @Autowired
-    private JWTUtil jwtUtil;
+    private JwtTokenService jwtTokenService;
     private String token;
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
@@ -67,7 +67,7 @@ public class BoardControllerTest {
         String username = "test";
         String role = "ROLE_USER";
         Long expiredMs = 1000 * 60L; // 1분
-        token = jwtUtil.createJwt(id, username, role, expiredMs);
+        token = jwtTokenService.createJwt(id, username, role, expiredMs);
 
         SignUpRequestDto signUpRequestDto = new SignUpRequestDto();
 
@@ -154,7 +154,7 @@ public class BoardControllerTest {
         String username = "test";
         String role = "ROLE_USER";
         Long expiredToken = 1L;
-        token = jwtUtil.createJwt(id, username, role, expiredToken);
+        token = jwtTokenService.createJwt(id, username, role, expiredToken);
 
         //when
         mockMvc.perform(
@@ -362,7 +362,7 @@ public class BoardControllerTest {
         String username = "notPermissionMember";
         String role = "ROLE_USER";
         Long expiredMs = 1000 * 60L; // 1분
-        token = jwtUtil.createJwt(id, username, role, expiredMs);
+        token = jwtTokenService.createJwt(id, username, role, expiredMs);
 
 
         PatchBoardRequestDto patchBoardRequestDto = new PatchBoardRequestDto();
@@ -427,7 +427,7 @@ public class BoardControllerTest {
         String username = "notPermissionMember";
         String role = "ROLE_USER";
         Long expiredMs = 1000 * 60L; // 1분
-        token = jwtUtil.createJwt(id, username, role, expiredMs);
+        token = jwtTokenService.createJwt(id, username, role, expiredMs);
 
         //when
         mockMvc.perform(
@@ -549,7 +549,7 @@ public class BoardControllerTest {
         String username = "notPermissionMember";
         String role = "ROLE_USER";
         Long expiredMs = 1000 * 60L; // 1분
-        token = jwtUtil.createJwt(id, username, role, expiredMs);
+        token = jwtTokenService.createJwt(id, username, role, expiredMs);
 
         Long boardId = 1L;
         Long commentId = 1L;

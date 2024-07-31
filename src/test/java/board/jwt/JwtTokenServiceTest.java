@@ -7,21 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JWTUtilTest {
+class JwtTokenServiceTest {
 
 
-    JWTUtil jwtUtil;
+    JwtTokenService jwtTokenService;
     String token;
 
 //    @BeforeEach
     @BeforeAll
     void setUp() {
 
-        jwtUtil = new JWTUtil();
-        jwtUtil.setSecretKey("this_is_secretKey");
+        jwtTokenService = new JwtTokenService();
+        jwtTokenService.setSecretKey("this_is_secretKey");
 
         Long expiredMs = 60000 * 5L; // 5m
-        token = jwtUtil.createJwt(1L, "jaehoon1022", "ROLE_USER", expiredMs);
+        token = jwtTokenService.createJwt(1L, "jaehoon1022", "ROLE_USER", expiredMs);
         System.out.println("token = " + token);
 
     }
@@ -29,24 +29,24 @@ class JWTUtilTest {
     @Test
     void getUsername() {
 
-        String username = jwtUtil.getUsername(token);
+        String username = jwtTokenService.getUsername(token);
         Assertions.assertThat(username).isEqualTo("jaehoon1022");
     }
 
     @Test
     void getRole() {
 
-        String role = jwtUtil.getRole(token);
+        String role = jwtTokenService.getRole(token);
         Assertions.assertThat(role).isEqualTo("ROLE_USER");
 
     }
 
     @Test
     void isExpired() {
-        Boolean expired = jwtUtil.isExpired(token);
+        Boolean expired = jwtTokenService.isExpired(token);
         Assertions.assertThat(expired).isFalse();
 
-        JWTUtil jwt = new JWTUtil();
+        JwtTokenService jwt = new JwtTokenService();
         jwt.setSecretKey("secret");
         Long expiredMs = 1L; // 1ms
         String expiredToken = jwt.createJwt(1L, "hyun", "ROLE_USER", expiredMs);
