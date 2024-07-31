@@ -3,31 +3,33 @@
 actor User
 
 User -> JwtAuthorizationFilter: 토큰 유효성 체크
+activate JwtAuthorizationFilter
+deactivate JwtAuthorizationFilter
 
 User -> JwtAuthenticationFilter: POST /login (username, password)
 activate JwtAuthenticationFilter
 
-JwtAuthenticationFilter -> AuthenticationManager: attemptAuthentication(username, password)
+JwtAuthenticationFilter -> AuthenticationManager: 인증 시도
 activate AuthenticationManager
 
 AuthenticationManager -> AuthenticationProvider: 인증 요청 처리
 activate AuthenticationProvider
 
-AuthenticationProvider -> AuthenticationProvider: 사용자 자격 증명 검증
-AuthenticationProvider --> AuthenticationManager: 인증 결과 (Authentication)
-
 alt 인증 성공
-    AuthenticationManager -> JwtAuthenticationFilter: successfulAuthentication(authentication, response)
+    AuthenticationProvider --> AuthenticationManager: 인증 성공
+    deactivate AuthenticationProvider
+    AuthenticationManager --> JwtAuthenticationFilter: 인증 객체 전달
+    JwtAuthenticationFilter -> JwtTokenService: JWT 토큰 생성 요청
     activate JwtTokenService
-
-    JwtTokenService -> JwtTokenService: JWT 토큰 생성
-    JwtTokenService --> JwtAuthenticationFilter: JWT 토큰
-    AbstractAuthenticationProcessingFilter -->> User: ResponseEntity Status: 200 (JWT 토큰 포함)
+    JwtTokenService --> JwtAuthenticationFilter: JWT 토큰 반환
     deactivate JwtTokenService
+    JwtAuthenticationFilter --> User: ResponseEntity Status: 200 (JWT 토큰 포함)
 
 else 인증 실패
-    AuthenticationManager -> JwtAuthenticationFilter: unsuccessfulAuthentication(request, response, exception)
-    JwtAuthenticationFilter -->> User: ResponseEntity Status: 401 (오류 메시지)
+    AuthenticationProvider --> AuthenticationManager: 인증 실패
+    deactivate AuthenticationProvider
+    AuthenticationManager --> JwtAuthenticationFilter: 인증 실패
+    JwtAuthenticationFilter --> User: ResponseEntity Status: 401
 end
 
 deactivate AuthenticationManager

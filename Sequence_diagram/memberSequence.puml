@@ -13,14 +13,14 @@ activate UserMapper
 UserMapper -> DataBase : Username 중복 여부 쿼리 실행
 activate DataBase
 
-DataBase -->> UserMapper: Boolean
+DataBase --> UserMapper: Boolean
 deactivate DataBase
-UserMapper -->> MemberService: true/false
+UserMapper --> MemberService: true/false
 deactivate UserMapper
 
 alt Username exists
-    MemberService -->> MemberController: 이미 존재하는 로그인 ID
-    MemberController -->> User: ResponseEntity Status: 400
+    MemberService --> MemberController: 이미 존재하는 로그인 ID
+    MemberController --> User: ResponseEntity Status: 400
     deactivate MemberService
 
 else not exists
@@ -29,24 +29,24 @@ else not exists
     UserMapper -> DataBase : Email 중복 여부 쿼리 실행
     activate DataBase
 
-    DataBase -->> UserMapper: Boolean
+    DataBase --> UserMapper: Boolean
     deactivate DataBase
 
-    UserMapper -->> MemberService: true/false
+    UserMapper --> MemberService: true/false
     deactivate UserMapper
 
     alt Email exists
-        MemberService -->> MemberController: 이미 존재하는 Email
+        MemberService --> MemberController: 이미 존재하는 Email
         deactivate MemberService
-        MemberController -->> User: ResponseEntity Status: 400
+        MemberController --> User: ResponseEntity Status: 400
 
     else not exists
         MemberService -> UserMapper: 회원 저장
         UserMapper -> DataBase: 회원 저장 쿼리 실행
 
-        MemberService -->> MemberController: 회원가입 성공
+        MemberService --> MemberController: 회원가입 성공
         deactivate MemberService
-        MemberController -->> User: ResponseEntity Status: 200
+        MemberController --> User: ResponseEntity Status: 200
     end
 end
 

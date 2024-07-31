@@ -14,9 +14,9 @@ activate BoardService
 
 BoardService -> DataBase: 게시글 저장
 
-BoardService -->> BoardController: 게시판 생성 성공
+BoardService --> BoardController: 게시판 생성 성공
 deactivate BoardService
-BoardController -->> User: ResponseEntity Status: 200
+BoardController --> User: ResponseEntity Status: 200
 deactivate BoardController
 
 @enduml

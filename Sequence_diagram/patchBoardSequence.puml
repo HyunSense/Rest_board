@@ -13,28 +13,28 @@ activate BoardMapper
 BoardMapper -> DataBase: 게시글 조회 쿼리 실행
 activate DataBase
 
-DataBase -->> BoardMapper: 게시글 반환
+DataBase --> BoardMapper: 게시글 반환
 deactivate DataBase
-BoardMapper -->> BoardService: 게시글 존재 여부
+BoardMapper --> BoardService: 게시글 존재 여부
 deactivate BoardMapper
 
 alt Board does not exist
-    BoardService -->> BoardController: 존재하지 않는 게시글
-    BoardController -->> User: ResponseEntity Status: 400
+    BoardService --> BoardController: 존재하지 않는 게시글
+    BoardController --> User: ResponseEntity Status: 400
     deactivate BoardService
 
 else Board exists
     alt User is not owner
-        BoardService -->> BoardController: 게시글 수정 권한 없음
-        BoardController -->> User: ResponseEntity Status: 403
+        BoardService --> BoardController: 게시글 수정 권한 없음
+        BoardController --> User: ResponseEntity Status: 403
     else User is owner
         BoardService -> BoardMapper: 게시글 수정
         activate BoardMapper
         BoardMapper -> DataBase: 게시글 수정 쿼리 실행
         deactivate BoardMapper
 
-        BoardService -->> BoardController: 게시글 수정 성공
-        BoardController -->> User: ResponseEntity Status: 200
+        BoardService --> BoardController: 게시글 수정 성공
+        BoardController --> User: ResponseEntity Status: 200
     end
 
 end
