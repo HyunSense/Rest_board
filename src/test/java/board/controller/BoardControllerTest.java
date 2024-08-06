@@ -216,17 +216,14 @@ public class BoardControllerTest {
         //given
         int page = 1;
         int limit = 10;
-        GetBoardAllRequestDto getBoardAllRequestDto = new GetBoardAllRequestDto();
-        getBoardAllRequestDto.setPage(page);
-        getBoardAllRequestDto.setLimit(limit);
+
 
         //when
         mockMvc.perform(
                         get("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header(AUTHORIZATION, BEARER + token)
-                                .content(objectMapper.writeValueAsString(getBoardAllRequestDto)))
+                                .queryParam("page", String.valueOf(page))
+                                .queryParam("limit", String.valueOf(limit)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
@@ -245,8 +242,7 @@ public class BoardControllerTest {
         //when
         mockMvc.perform(
                         get("/api/v1/boards")
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON))
+                                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))

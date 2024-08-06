@@ -32,7 +32,8 @@ public class BoardController {
 
     // 전체 글 목록
     @GetMapping("/boards")
-    public ResponseEntity<? super GetBoardAllResponseDto> getBoardAll(@RequestBody(required = false) @Valid GetBoardAllRequestDto dto) {
+//    public ResponseEntity<? super GetBoardAllResponseDto> getBoardAll(@RequestBody(required = false) @Valid GetBoardAllRequestDto dto) {
+    public ResponseEntity<? super GetBoardAllResponseDto> getBoardAll(@ModelAttribute @Valid GetBoardAllRequestDto dto) {
 
         if (dto == null) {
             dto = new GetBoardAllRequestDto();
