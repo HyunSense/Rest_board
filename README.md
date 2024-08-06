@@ -43,16 +43,16 @@
 ![loginSequence](https://github.com/user-attachments/assets/118500d6-9476-42af-8aae-64f94321fdb2)
 
 ### 게시글 작성 시퀀스
-![postBoardSequence](https://github.com/user-attachments/assets/af1627f7-2c07-4759-9eda-a072d677f0c8)
+![postBoardSequence](https://github.com/user-attachments/assets/56d9e9ca-5723-47af-86f9-0b353debecb9)
 
 ### 게시글 조회 시퀀스
-![getBoardSequence](https://github.com/user-attachments/assets/e15963e5-5dad-4b01-b3ca-8e0cdcfb890b)
+![getBoardSequence](https://github.com/user-attachments/assets/4ec95d7a-91b4-4fba-a5c0-1152b20a8153)
 
 ### 게시글 수정 시퀀스
-![patchBoardSequence](https://github.com/user-attachments/assets/8672f884-7a54-4361-ba6c-8adf80add8bf)
+![patchBoardSequence](https://github.com/user-attachments/assets/e3173ab2-5bc8-441d-b1cf-39d22b6042e8)
 
 ### 게시글 삭제 시퀀스
-![deleteBoardSequence](https://github.com/user-attachments/assets/3a6ae2f2-be1c-49d1-80d0-ef59a6462498)
+![deleteBoardSequence](https://github.com/user-attachments/assets/cb9c6376-d312-4e51-9403-59f21d4f5499)
 
 ## 클래스 다이어그램(수정중)
 ![RestBoardClassDiagram](https://github.com/user-attachments/assets/fb5b5e12-ee58-4193-941e-b77a2cb887ef)
