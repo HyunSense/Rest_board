@@ -22,7 +22,7 @@ public class BoardController {
     private final BoardService boardService;
 
     // 글 작성
-    @PostMapping("/post")
+    @PostMapping("/boards")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid PostBoardRequestDto dto) {
@@ -31,7 +31,7 @@ public class BoardController {
     }
 
     // 전체 글 목록
-    @GetMapping("/posts")
+    @GetMapping("/boards")
     public ResponseEntity<? super GetBoardAllResponseDto> getBoardAll(@RequestBody(required = false) @Valid GetBoardAllRequestDto dto) {
 
         if (dto == null) {
@@ -43,21 +43,21 @@ public class BoardController {
     }
 
     // 글 검색 조회
-    @GetMapping("/post/search")
+    @GetMapping("/boards/search")
     public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardAll(@ModelAttribute @Valid GetSearchBoardListRequestDto dto) {
 
         return boardService.getSearchBoard(dto);
     }
 
     // 글 조회
-    @GetMapping("/post/{id}")
+    @GetMapping("/boards/{id}")
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable Long id) {
 
         return boardService.getBoardById(id);
     }
 
     // 글 수정
-    @PatchMapping("/post/{id}")
+    @PatchMapping("/boards/{id}")
     public ResponseEntity<? super PatchBoardResponseDto> patchBoard(
             @RequestBody @Valid PatchBoardRequestDto dto,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -67,7 +67,7 @@ public class BoardController {
     }
 
     //글 삭제
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/boards/{id}")
     public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id) {
@@ -76,14 +76,14 @@ public class BoardController {
     }
 
     //댓글리스트 조회
-    @GetMapping("/post/{boardId}/comment-list")
+    @GetMapping("/boards/{boardId}/comments")
     public ResponseEntity<? super GetCommentListResponseDto> getCommentList(@PathVariable Long boardId) {
 
         return boardService.getCommentList(boardId);
     }
 
     // 댓글 작성
-    @PostMapping("/post/{boardId}/comment")
+    @PostMapping("/boards/{boardId}/comments")
     public ResponseEntity<? super PostCommentResponseDto> postComment(
             @RequestBody @Valid PostCommentRequestDto dto,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -93,7 +93,7 @@ public class BoardController {
     }
 
     //댓글 삭제
-    @DeleteMapping("/post/{boardId}/comment/{id}")
+    @DeleteMapping("/boards/{boardId}/comments/{id}")
     public ResponseEntity<? super DeleteCommentResponseDto> deleteComment(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
@@ -103,7 +103,7 @@ public class BoardController {
     }
 
     //좋아요 토글
-    @GetMapping("/post/{boardId}/likes")
+    @GetMapping("/boards/{boardId}/likes")
     public ResponseEntity<? super GetLikesResponseDto> toggleLikes(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId) {

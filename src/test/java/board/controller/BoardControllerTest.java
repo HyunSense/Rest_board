@@ -106,7 +106,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                post("/api/v1/post")
+                post("/api/v1/boards")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, BEARER + token)
@@ -130,7 +130,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post")
+                        post("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + invalidToken)
@@ -158,7 +158,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post")
+                        post("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -178,7 +178,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post")
+                        post("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -199,7 +199,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post")
+                        post("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -222,7 +222,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/posts")
+                        get("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -244,7 +244,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/posts")
+                        get("/api/v1/boards")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -263,9 +263,9 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/" + boardId)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON))
+                        get("/api/v1/boards/" + boardId)
+                                .accept(MediaType.APPLICATION_JSON))
+//                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
@@ -282,7 +282,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/" + boardId)
+                        get("/api/v1/boards/" + boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -303,7 +303,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        patch("/api/v1/post/"+boardId)
+                        patch("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -324,7 +324,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        patch("/api/v1/post/"+boardId)
+                        patch("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -343,7 +343,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        patch("/api/v1/post/"+boardId)
+                        patch("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -371,7 +371,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        patch("/api/v1/post/"+boardId)
+                        patch("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -391,7 +391,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+boardId)
+                        delete("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -408,7 +408,7 @@ public class BoardControllerTest {
         Long boardId = 999L;
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+boardId)
+                        delete("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -431,7 +431,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+boardId)
+                        delete("/api/v1/boards/"+boardId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -451,7 +451,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post/"+ boardId + "/comment")
+                        post("/api/v1/boards/"+ boardId + "/comments")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -473,7 +473,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        post("/api/v1/post/"+ boardId + "/comment")
+                        post("/api/v1/boards/"+ boardId + "/comments")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token)
@@ -493,7 +493,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                        delete("/api/v1/boards/"+ boardId + "/comments/" + commentId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -512,7 +512,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                        delete("/api/v1/boards/"+ boardId + "/comments/" + commentId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -531,7 +531,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                        delete("/api/v1/boards/"+ boardId + "/comments/" + commentId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -556,7 +556,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        delete("/api/v1/post/"+ boardId + "/comment/" + commentId)
+                        delete("/api/v1/boards/"+ boardId + "/comments/" + commentId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
@@ -574,7 +574,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/"+ boardId + "/comment-list")
+                        get("/api/v1/boards/"+ boardId + "/comments")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -593,7 +593,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/search")
+                        get("/api/v1/boards/search")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .queryParam("type", type)
                                 .queryParam("keyword", keyword))
@@ -613,7 +613,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/search")
+                        get("/api/v1/boards/search")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .queryParam("type", type)
                                 .queryParam("keyword", keyword))
@@ -632,7 +632,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/" + boardId + "/likes")
+                        get("/api/v1/boards/" + boardId + "/likes")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
@@ -658,7 +658,7 @@ public class BoardControllerTest {
 
         //when
         mockMvc.perform(
-                        get("/api/v1/post/" + boardId + "/likes")
+                        get("/api/v1/boards/" + boardId + "/likes")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
