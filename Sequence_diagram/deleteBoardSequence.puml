@@ -1,7 +1,7 @@
 @startuml
 actor User
 
-User -> BoardController: DELETE /post/{id}
+User -> BoardController: DELETE /boards/{id}
 activate BoardController
 
 BoardController -> BoardService: DeleteBoardDto 맵핑 및 유효성 체크

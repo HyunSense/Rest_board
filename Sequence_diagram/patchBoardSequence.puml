@@ -1,7 +1,7 @@
 @startuml
 actor User
 
-User -> BoardController: PATCH /post/{id}
+User -> BoardController: PATCH /boards/{id}
 activate BoardController
 
 BoardController -> BoardService: PatchBoardDto 맵핑 및 유효성 체크

@@ -6,7 +6,7 @@ participant "BoardService"
 participant "BoardMapper"
 participant "DataBase"
 
-User -> BoardController: POST /post
+User -> BoardController: POST /boards
 activate BoardController
 
 BoardController -> BoardService: PostBoardDto 맵핑 및 유효성 체크

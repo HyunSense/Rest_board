@@ -5,7 +5,7 @@ actor User
 'participant "BoardMapper"
 'participant "DataBase"
 
-User -> BoardController: GET /post/{id}
+User -> BoardController: GET /boards/{id}
 activate BoardController
 
 BoardController -> BoardService: GetBoardDto 맵핑 및 유효성 체크
