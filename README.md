@@ -28,7 +28,7 @@
 
 
 
-### <a href="https://drive.google.com/file/d/15MWEbtct45WV0gRDGbl0sbu6gh75QcWe/view?usp=sharing">API 명세서 PDF</a>
+### <a href="https://drive.google.com/file/d/1yTKePs1NsfInhDzOVriECa9wDw2JmVK-/view?usp=sharing">API 명세서 PDF</a>
 ### <a href="https://hyunsense.notion.site/REST-API-f59958d679ac45adbe96fb923c4eafb4?pvs=4">API 명세서 노션</a>
 
 ## ERD
