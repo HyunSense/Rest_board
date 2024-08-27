@@ -32,7 +32,7 @@
 ### <a href="https://hyunsense.notion.site/REST-API-f59958d679ac45adbe96fb923c4eafb4?pvs=4">API 명세서 노션</a>
 
 ## ERD
-![erd_capture](https://github.com/user-attachments/assets/01022a45-ff1f-4ca5-9a82-ad8a5141e3b0)
+![erd_capture](https://github.com/user-attachments/assets/dc73745c-3bbb-4ada-9023-cdbd7fa29483)
 
 ## 시퀀스 다이어그램
 
