@@ -6,7 +6,7 @@ import board.dto.request.auth.SignUpRequestDto;
 import board.dto.request.board.*;
 import board.dto.response.board.GetBoardResponseDto;
 import board.jwt.JwtTokenService;
-import board.mapper.AutoIncrementMapper;
+import board.repository.V1.mapper.AutoIncrementMapper;
 import board.service.BoardService;
 import board.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;

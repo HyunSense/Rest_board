@@ -2,7 +2,7 @@ package board.service;
 
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.auth.SignUpResponseDto;
-import board.entity.Member;
+import board.entity.V1.Member;
 import org.springframework.http.ResponseEntity;
 
 public interface MemberService {

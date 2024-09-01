@@ -1,7 +1,7 @@
 package board.jwt;
 
 import board.config.auth.PrincipalDetails;
-import board.entity.Member;
+import board.entity.V1.Member;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

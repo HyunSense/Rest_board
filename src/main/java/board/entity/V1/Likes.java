@@ -1,4 +1,4 @@
-package board.entity;
+package board.entity.V1;
 
 import lombok.*;
 

@@ -1,6 +1,6 @@
 package board.config.auth;
 
-import board.entity.Member;
+import board.entity.V1.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

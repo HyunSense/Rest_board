@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="board.mapper.BoardMapper">
+<mapper namespace="board.repository.V1.mapper.BoardMapper">
 
     <!-- BOARD -->
-<!--    <insert id="saveBoard" parameterType="board.entity.Board" useGeneratedKeys="true" keyProperty="id">-->
-    <insert id="saveBoard" parameterType="board.entity.Board">
+<!--    <insert id="saveBoard" parameterType="board.entity.V1.Board" useGeneratedKeys="true" keyProperty="id">-->
+    <insert id="saveBoard" parameterType="board.entity.V1.Board">
         insert into board
             (
              member_id,
@@ -15,19 +15,19 @@
         values (#{memberId}, #{title}, #{content});
     </insert>
 
-    <update id="updateBoard" parameterType="board.entity.Board">
+    <update id="updateBoard" parameterType="board.entity.V1.Board">
         update board
         set title = #{title}, content = #{content}
         where id = #{id}
     </update>
 
-    <update id="updateViewCountBoard" parameterType="board.entity.Board">
+    <update id="updateViewCountBoard" parameterType="board.entity.V1.Board">
         update board
         set view_count = #{viewCount}, updated_at = #{updatedAt}
         where id = #{id}
     </update>
 
-    <update id="updateCommentCountBoard" parameterType="board.entity.Board">
+    <update id="updateCommentCountBoard" parameterType="board.entity.V1.Board">
         update board
         set comment_count = #{commentCount}, updated_at = #{updatedAt}
         where id = #{id}
@@ -39,7 +39,7 @@
         where id = #{id}
     </update>
 
-    <select id="findAllByMemberId" parameterType="java.lang.Long" resultType="board.entity.Board">
+    <select id="findAllByMemberId" parameterType="java.lang.Long" resultType="board.entity.V1.Board">
         select id,
                member_id,
                title,
@@ -55,7 +55,7 @@
     </select>
 
     <!-- ANSI -->
-    <select id="getBoardById" parameterType="java.lang.Long" resultType="board.mapper.resultset.BoardResultSet">
+    <select id="getBoardById" parameterType="java.lang.Long" resultType="board.repository.V1.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
@@ -70,7 +70,7 @@
         where B.id = #{id} and is_deleted = 0
     </select>
 
-    <select id="findBoardById" resultType="board.entity.Board">
+    <select id="findBoardById" resultType="board.entity.V1.Board">
         select id,
                member_id,
                title,
@@ -85,7 +85,7 @@
         where id = #{id} and is_deleted = 0
     </select>
 
-    <select id="getAllBoard" resultType="board.mapper.resultset.BoardResultSet">
+    <select id="getAllBoard" resultType="board.repository.V1.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
@@ -106,7 +106,7 @@
     </delete>
 
     <!-- COMMENT -->
-    <insert id="saveCommentBoard" parameterType="board.entity.Comment">
+    <insert id="saveCommentBoard" parameterType="board.entity.V1.Comment">
         insert into comment
         (
          member_id,
@@ -116,7 +116,7 @@
         values (#{memberId}, #{boardId}, #{content})
     </insert>
 
-    <select id="findCommentById" resultType="board.entity.Comment">
+    <select id="findCommentById" resultType="board.entity.V1.Comment">
         select id,
                member_id,
                board_id,
@@ -139,7 +139,7 @@
         update comment set is_deleted = 1 where board_id = #{boardId}
     </delete>
 
-    <select id="findBoardByTypeAndKeyword" resultType="board.mapper.resultset.BoardResultSet">
+    <select id="findBoardByTypeAndKeyword" resultType="board.repository.V1.mapper.resultset.BoardResultSet">
         select B.id,
                B.title,
                B.content,
@@ -169,7 +169,7 @@
         </where>
     </select>
 
-    <select id="findAllCommentByBoardId" resultType="board.mapper.resultset.CommentResultSet">
+    <select id="findAllCommentByBoardId" resultType="board.repository.V1.mapper.resultset.CommentResultSet">
         select C.id,
                M.username as username,
                C.content,
@@ -181,7 +181,7 @@
           and is_deleted = 0
     </select>
 
-    <insert id="saveLikesBoard" parameterType="board.entity.Likes">
+    <insert id="saveLikesBoard" parameterType="board.entity.V1.Likes">
         insert into likes
         (
          member_id,
@@ -190,13 +190,13 @@
         values (#{memberId}, #{boardId})
     </insert>
 
-    <select id="findLikesByMemberIdAndBoardId" resultType="board.entity.Likes">
+    <select id="findLikesByMemberIdAndBoardId" resultType="board.entity.V1.Likes">
         select member_id, board_id
         from likes
         where member_id = #{memberId} and board_id = #{boardId}
     </select>
 
-    <delete id="deleteLikesBoard" parameterType="board.entity.Likes">
+    <delete id="deleteLikesBoard" parameterType="board.entity.V1.Likes">
         delete from likes
         where member_id = #{memberId} and board_id = #{boardId}
     </delete>

@@ -2,8 +2,8 @@ package board.service;
 
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.auth.SignUpResponseDto;
-import board.entity.Member;
-import board.mapper.UserMapper;
+import board.entity.V1.Member;
+import board.repository.V1.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

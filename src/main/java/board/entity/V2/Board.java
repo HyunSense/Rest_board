@@ -1,31 +1,53 @@
-package board.entity;
+package board.entity.V2;
 
-import board.dto.request.board.PatchBoardRequestDto;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@ToString
+@Entity
 public class Board {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
-    private String title;
-    private String content;
-    private long viewCount;
-    private int commentCount;
-    private int likesCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private int isDeleted;
 
-    public void patchBoard(PatchBoardRequestDto dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    private String title;
+
+    private String content;
+
+    private long viewCount;
+
+    private int commentCount;
+
+    private int likesCount;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private boolean isDeleted;
+
+    public void updateBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void deleteBoard() {
+        this.isDeleted = true;
     }
 
     public void increaseViewCount() {

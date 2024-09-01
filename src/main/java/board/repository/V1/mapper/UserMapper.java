@@ -1,6 +1,6 @@
-package board.mapper;
+package board.repository.V1.mapper;
 
-import board.entity.Member;
+import board.entity.V1.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

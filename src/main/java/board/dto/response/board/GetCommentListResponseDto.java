@@ -3,7 +3,7 @@ package board.dto.response.board;
 import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.response.ResponseDto;
-import board.mapper.resultset.CommentResultSet;
+import board.repository.V1.mapper.resultset.CommentResultSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;

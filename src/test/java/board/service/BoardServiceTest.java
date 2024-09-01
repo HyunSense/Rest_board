@@ -2,12 +2,12 @@ package board.service;
 
 import board.dto.request.board.*;
 import board.dto.response.board.*;
-import board.entity.Board;
-import board.entity.Comment;
-import board.entity.Likes;
-import board.mapper.BoardMapper;
-import board.mapper.resultset.BoardResultSet;
-import board.mapper.resultset.CommentResultSet;
+import board.entity.V1.Board;
+import board.entity.V1.Comment;
+import board.entity.V1.Likes;
+import board.repository.V1.mapper.BoardMapper;
+import board.repository.V1.mapper.resultset.BoardResultSet;
+import board.repository.V1.mapper.resultset.CommentResultSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

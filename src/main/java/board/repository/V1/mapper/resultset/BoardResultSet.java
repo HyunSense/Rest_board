@@ -1,4 +1,4 @@
-package board.mapper.resultset;
+package board.repository.V1.mapper.resultset;
 
 import lombok.*;
 

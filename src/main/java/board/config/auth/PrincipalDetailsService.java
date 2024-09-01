@@ -1,7 +1,7 @@
 package board.config.auth;
 
-import board.entity.Member;
-import board.mapper.UserMapper;
+import board.entity.V1.Member;
+import board.repository.V1.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

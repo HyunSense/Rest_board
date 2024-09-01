@@ -1,4 +1,4 @@
-package board.mapper;
+package board.repository.V1.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
