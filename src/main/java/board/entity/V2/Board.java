@@ -1,11 +1,15 @@
 package board.entity.V2;
 
+import board.dto.response.board.V2.PostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Builder
@@ -41,12 +45,30 @@ public class Board {
 
     private boolean isDeleted;
 
-    public void updateBoard(String title, String content) {
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    public void addComment(Comment comment) {
+//
+//        comments.add(comment);
+//        comment.setBoard(this);
+//
+//    }
+
+    public void update(String title, String content) {
+
+//        if (StringUtils.hasText(title)) {
+//            this.title = title;
+//        }
+//        if (StringUtils.hasText(content)) {
+//            this.content = content;
+//        }
+
         this.title = title;
         this.content = content;
     }
 
-    public void deleteBoard() {
+    public void delete() {
         this.isDeleted = true;
     }
 

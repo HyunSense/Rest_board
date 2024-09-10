@@ -1,13 +1,14 @@
 package board.entity.V2;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,9 +30,6 @@ public class Member {
 
     private String role;
 
-    //TODO: LAZY 걸지 않는 이유
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -39,9 +37,16 @@ public class Member {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public void addBoard(Board board) {
-        boards.add(board);
-        board.setMember(this);
-    }
+//    //TODO: LAZY 걸지 않는 이유
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Board> boards = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Comment> comments = new ArrayList<>();
+
+//    public void addBoard(Board board) {
+//        boards.add(board);
+//        board.setMember(this);
+//    }
 
 }

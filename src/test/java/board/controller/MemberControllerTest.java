@@ -4,7 +4,6 @@ import board.common.ResponseCode;
 import board.common.ResponseMessage;
 import board.dto.request.auth.LoginRequestDto;
 import board.dto.request.auth.SignUpRequestDto;
-import board.repository.V1.mapper.AutoIncrementMapper;
 import board.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+//@TestPropertySource(locations = "classpath:application-test.properties")
 class MemberControllerTest {
 
     @Autowired
@@ -41,15 +34,10 @@ class MemberControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private AutoIncrementMapper autoIncrementMapper;
-
-    @Autowired
     private MemberService memberService;
 
     @BeforeEach
     void setUp() {
-
-        autoIncrementMapper.resetMemberAutoIncrement();
 
         SignUpRequestDto signUpRequestDto = new SignUpRequestDto();
         signUpRequestDto.setUsername("testMember");
@@ -65,14 +53,12 @@ class MemberControllerTest {
     @DisplayName("회원가입 성공")
     void postSignUpSuccess() throws Exception {
         //given
-
         SignUpRequestDto signUpRequestDto = new SignUpRequestDto();
         signUpRequestDto.setUsername("joinMember");
         signUpRequestDto.setPassword("joinPassword");
         signUpRequestDto.setName("joinName");
         signUpRequestDto.setEmail("join@join.com");
 
-//        willReturn(SignUpResponseDto.success()).given(memberService).signUp(any(SignUpRequestDto.class));
         //when
         mockMvc.perform(
                         post("/api/v1/auth/sign-up")
@@ -117,9 +103,6 @@ class MemberControllerTest {
         signUpRequestDtoExistUsername.setEmail("test@test.com");
 
         //when
-//        willReturn(SignUpResponseDto.existLoginId()).given(memberService).signUp(any(SignUpRequestDto.class));
-
-        //then
         mockMvc.perform(
                         post("/api/v1/auth/sign-up")
                                 .accept(MediaType.APPLICATION_JSON)
@@ -149,6 +132,5 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
                 .andDo(print());
-        //then
     }
 }

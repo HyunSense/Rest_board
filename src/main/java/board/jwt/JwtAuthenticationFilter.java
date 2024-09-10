@@ -1,17 +1,19 @@
 package board.jwt;
 
+import board.common.ResponseCode2;
 import board.config.auth.PrincipalDetails;
 import board.dto.request.auth.LoginRequestDto;
-import board.dto.response.auth.LoginResponseDto;
+import board.dto.response.DataResponseDto;
 import board.dto.response.ResponseDto;
+import board.dto.response.auth.LoginResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +36,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private final ObjectMapper objectMapper;
 
     private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/v1/auth/login";
-//    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
     private static final String HTTP_METHOD = "POST";
     private static final String BEARER = "Bearer ";
 
@@ -57,11 +58,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         log.info("JwtAuthenticationFilter.attemptAuthentication");
-        String method = request.getMethod();
-        log.info("method = {}", method);
 
         LoginRequestDto loginRequestDto = objectMapper.readValue(request.getReader(), LoginRequestDto.class);
-        log.info("loginRequestDto = {}", loginRequestDto);
+        log.info("LOGIN Attempt = {}", loginRequestDto.getUsername());
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
@@ -71,9 +70,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
-        log.info("JwtAuthenticationFilter.successfulAuthentication");
-
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String username = principalDetails.getUsername();
@@ -88,25 +84,21 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String token = jwtTokenService.createJwt(id, username, role, EXPIRED_MS);
         String expired = jwtTokenService.getExpired(token);
 
-
-        ResponseEntity<LoginResponseDto> responseEntity = LoginResponseDto.success(token, expired);
+        LoginResponseDto dto = new LoginResponseDto(token, expired);
         response.addHeader("Authorization", BEARER + token);
-        response.setStatus(responseEntity.getStatusCode().value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        objectMapper.writeValue(response.getWriter(),responseEntity.getBody());
+        objectMapper.writeValue(response.getWriter(), DataResponseDto.success(dto));
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
-        log.info("JwtAuthenticationFilter.unsuccessfulAuthentication");
-
-        ResponseEntity<ResponseDto> responseEntity = LoginResponseDto.loginFailed();
-        response.setStatus(responseEntity.getStatusCode().value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), responseEntity.getBody());
+        objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode2.LOGIN_FAILED));
     }
 }

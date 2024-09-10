@@ -9,16 +9,18 @@ public interface BoardRepository {
 
     void save(Board board);
 
-    Board findById(Long id);
+    Optional<Board> findById(Long id);
 
-    Board findWithUsernameById(Long id);
+    Optional<Board> findWithUsernameById(Long id);
 
-    List<Board> findAllByMemberId(Long memberId);
+    List<Board> findAll();
 
-    List<Board> findAllWithUsernameByMemberId(Long memberId,int limit, int offset);
+    List<Board> findAllWithUsername(int limit, int offset);
 
-    void update(Long id, String title, String content);
+    List<Board> findBoardByTypeAndKeyword(String type, String keyword);
 
-    void deleteById(Long id);
+//    void update(Long id, String title, String content);
+
+//    void deleteById(Long id);
 
 }

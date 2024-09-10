@@ -1,17 +1,17 @@
 package board.exception;
 
-import board.common.ResponseCode;
-import board.common.ResponseMessage;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class CustomResponseException extends RuntimeException{
+@Getter
+public class CustomResponseException extends RuntimeException {
 
-    private String responseCode;
-    private String responseMessage;
+
+    private final String responseCode;
+    private final String responseMessage;
 
     public CustomResponseException(String responseCode, String responseMessage) {
-
-
+        super(responseMessage);
+        this.responseCode = responseCode;
+        this.responseMessage = responseMessage;
     }
 }

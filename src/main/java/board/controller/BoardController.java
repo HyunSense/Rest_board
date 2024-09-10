@@ -2,12 +2,14 @@ package board.controller;
 
 import board.config.auth.PrincipalDetails;
 import board.dto.request.board.*;
-import board.dto.response.board.*;
+import board.dto.response.ResponseDto;
 import board.service.BoardService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import board.service.CommentService;
+import board.service.LikesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,94 +22,113 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
+    private final LikesService likesService;
 
     // 글 작성
     @PostMapping("/boards")
-    public ResponseEntity<? super PostBoardResponseDto> postBoard(
+    public ResponseEntity<ResponseDto> postBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid PostBoardRequestDto dto) {
 
-        return boardService.createBoard(principalDetails.getId(), dto);
+        ResponseDto response = boardService.createBoard(principalDetails.getId(), dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 전체 글 목록
+    // 글 조회
+    @GetMapping("/boards/{id}")
+    public ResponseEntity<ResponseDto> getBoard(@PathVariable Long id) {
+
+        ResponseDto response = boardService.getBoardById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 전체 글 조회
     @GetMapping("/boards")
-    public ResponseEntity<? super GetBoardAllResponseDto> getBoardAll(@ModelAttribute @Valid GetBoardAllRequestDto dto) {
+    public ResponseEntity<ResponseDto> getBoardAll(@ModelAttribute @Valid GetBoardAllRequestDto dto) {
 
         if (dto == null) {
             dto = new GetBoardAllRequestDto();
         }
 
         log.info("page = {}, limit = {}", dto.getPage(), dto.getLimit());
-        return boardService.getAllBoards(dto);
+
+        ResponseDto response = boardService.getAllBoards(dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 글 검색 조회
     @GetMapping("/boards/search")
-    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardAll(@ModelAttribute @Valid GetSearchBoardListRequestDto dto) {
+    public ResponseEntity<ResponseDto> getSearchBoardAll(@ModelAttribute @Valid GetSearchBoardListRequestDto dto) {
 
-        return boardService.getSearchBoard(dto);
+        ResponseDto response = boardService.getSearchBoard(dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 글 조회
-    @GetMapping("/boards/{id}")
-    public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable Long id) {
-
-        return boardService.getBoardById(id);
-    }
 
     // 글 수정
     @PatchMapping("/boards/{id}")
-    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(
+    public ResponseEntity<ResponseDto> patchBoard(
             @RequestBody @Valid PatchBoardRequestDto dto,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id) {
 
-        return boardService.updateBoard(dto, principalDetails.getId(), id);
+        ResponseDto response = boardService.updateBoard(dto, principalDetails.getId(), id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     //글 삭제
     @DeleteMapping("/boards/{id}")
-    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(
+    public ResponseEntity<ResponseDto> deleteBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id) {
 
-        return boardService.deleteBoard(principalDetails.getId(), id);
+        ResponseDto response = boardService.deleteBoard(principalDetails.getId(), id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //댓글리스트 조회
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(@PathVariable Long boardId) {
+    public ResponseEntity<ResponseDto> getCommentList(@PathVariable Long boardId) {
 
-        return boardService.getCommentList(boardId);
+        ResponseDto response = commentService.getCommentList(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 댓글 작성
     @PostMapping("/boards/{boardId}/comments")
-    public ResponseEntity<? super PostCommentResponseDto> postComment(
+    public ResponseEntity<ResponseDto> postComment(
             @RequestBody @Valid PostCommentRequestDto dto,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId) {
 
-        return boardService.createComment(dto, principalDetails.getId(), boardId);
+        ResponseDto response = commentService.createComment(dto, principalDetails.getId(), boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //댓글 삭제
     @DeleteMapping("/boards/{boardId}/comments/{id}")
-    public ResponseEntity<? super DeleteCommentResponseDto> deleteComment(
+    public ResponseEntity<ResponseDto> deleteComment(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
             @PathVariable Long id) {
 
-        return boardService.deleteComment(principalDetails.getId(), boardId, id);
+        ResponseDto response = commentService.deleteComment(principalDetails.getId(), boardId, id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //좋아요 토글
     @GetMapping("/boards/{boardId}/likes")
-    public ResponseEntity<? super GetLikesResponseDto> toggleLikes(
+    public ResponseEntity<ResponseDto> toggleLikes(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId) {
 
-        return boardService.toggleLikes(principalDetails.getId(), boardId);
+        ResponseDto response = likesService.toggleLikes(principalDetails.getId(), boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

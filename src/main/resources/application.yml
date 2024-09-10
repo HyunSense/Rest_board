@@ -14,19 +14,6 @@ spring:
   jwt:
     secret: secretKey
 
-logging:
-  level:
-    org:
-      springframework:
-        jdbc: debug
-    board:
-      mapper: trace
-
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-  mapper-locations: classpath:mapper/**/*.xml
-
 springdoc:
   packages-to-scan: board
   default-produces-media-type: application/json;charset=UTF-8

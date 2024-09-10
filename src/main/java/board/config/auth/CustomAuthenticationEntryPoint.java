@@ -1,5 +1,6 @@
 package board.config.auth;
 
+import board.common.ResponseCode2;
 import board.dto.response.ResponseDto;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -34,15 +35,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 
         if (jwtVerificationException instanceof TokenExpiredException) {
-            objectMapper.writeValue(response.getWriter(), ResponseDto.tokenExpired().getBody());
+            objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode2.TOKEN_EXPIRED));
             return;
         }
 
         if (jwtVerificationException != null) {
-            objectMapper.writeValue(response.getWriter(), ResponseDto.invalidToken().getBody());
+            objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode2.INVALID_TOKEN));
             return;
         }
 
-        objectMapper.writeValue(response.getWriter(), ResponseDto.validationFailed().getBody());
+        objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode2.VALIDATION_FAILED));
     }
 }

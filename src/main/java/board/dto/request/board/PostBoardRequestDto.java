@@ -1,5 +1,6 @@
 package board.dto.request.board;
 
+import board.entity.V2.Board;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,4 +19,12 @@ public class PostBoardRequestDto {
 
     @NotBlank
     private String content;
+
+    public static Board toEntity(PostBoardRequestDto dto) {
+
+        return Board.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
+    }
 }
