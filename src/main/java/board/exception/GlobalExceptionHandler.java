@@ -1,6 +1,6 @@
 package board.exception;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.response.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto> handleValidationException(Exception e) {
 
         log.warn(e.getMessage(), e);
-        ResponseDto failureResponse = ResponseDto.failure(ResponseCode2.VALIDATION_FAILED);
+        ResponseDto failureResponse = ResponseDto.failure(ResponseCode.VALIDATION_FAILED);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failureResponse);
     }
 
@@ -26,7 +26,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto> handleBoardNotFoundException(BoardNotFoundException e) {
 
         log.warn(e.getMessage(), e);
-        ResponseDto failureResponse = ResponseDto.failure(ResponseCode2.NOT_EXIST_BOARD);
+        ResponseDto failureResponse = ResponseDto.failure(ResponseCode.NOT_EXIST_BOARD);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failureResponse);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleCommentNotFoundException(CommentNotFoundException e) {
+
+        log.warn(e.getMessage(), e);
+        ResponseDto failureResponse = ResponseDto.failure(ResponseCode.NOT_EXIST_COMMENT);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failureResponse);
     }
 
@@ -34,7 +42,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto> handleUnauthorizedException(UnauthorizedUserException e) {
 
         log.warn(e.getMessage(), e);
-        ResponseDto failureResponse = ResponseDto.failure(ResponseCode2.PERMISSION_DENIED);
+        ResponseDto failureResponse = ResponseDto.failure(ResponseCode.PERMISSION_DENIED);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(failureResponse);
     }
 
@@ -42,7 +50,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto> exception(Exception e) {
 
         log.warn("exception", e);
-        ResponseDto failureResponse = ResponseDto.failure(ResponseCode2.DATABASE_ERROR);
+        ResponseDto failureResponse = ResponseDto.failure(ResponseCode.DATABASE_ERROR);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(failureResponse);
     }
 
