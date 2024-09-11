@@ -1,3 +1,7 @@
+## 변경내역
+### MyBatis -> JPA Migration
+- MemberRepository Test 완료
+
 
 ## 프로젝트 주요기능
 - RestAPI 설계
