@@ -1,6 +1,6 @@
 package board.service.V2;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.request.board.PostCommentRequestDto;
 import board.dto.response.ResponseDto;
 import board.entity.V2.Board;
@@ -107,7 +107,7 @@ public class CommentServiceTest {
                 commentService.createComment(postCommentRequestDto, memberId, boardId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(boardRepository).findById(boardId);
         verify(commentRepository).save(any(Comment.class));
         verify(board).increaseComment();
@@ -144,7 +144,7 @@ public class CommentServiceTest {
                 commentService.deleteComment(memberId, boardId, commentId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(boardRepository).findById(boardId);
         verify(commentRepository).findWithUsernameById(commentId);
         verify(board).decreaseComment();

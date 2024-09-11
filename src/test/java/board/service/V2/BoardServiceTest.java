@@ -1,12 +1,14 @@
 package board.service.V2;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.request.board.GetBoardAllRequestDto;
 import board.dto.request.board.GetSearchBoardListRequestDto;
 import board.dto.request.board.PatchBoardRequestDto;
 import board.dto.request.board.PostBoardRequestDto;
 import board.dto.response.DataResponseDto;
 import board.dto.response.ResponseDto;
+import board.dto.response.board.V2.BoardListDto;
+import board.dto.response.board.V2.BoardSearchListDto;
 import board.entity.V2.Board;
 import board.entity.V2.Member;
 import board.exception.BoardNotFoundException;
@@ -110,8 +112,8 @@ class BoardServiceTest {
         ResponseDto response = boardService.createBoard(memberId, postBoardRequestDto);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
-        assertThat(response.getMessage()).isEqualTo(ResponseCode2.SUCCESS.getDescription());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
+        assertThat(response.getMessage()).isEqualTo(ResponseCode.SUCCESS.getMessage());
         verify(boardRepository).save(any(Board.class));
     }
 
@@ -126,7 +128,7 @@ class BoardServiceTest {
         ResponseDto response = boardService.getBoardById(boardId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(boardRepository).findWithUsernameById(boardId);
         verify(board).increaseViewCount();
     }
@@ -160,7 +162,7 @@ class BoardServiceTest {
         ResponseDto response = boardService.updateBoard(patchBoardRequestDto, memberId, boardId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(board).update(patchBoardRequestDto.getTitle(), patchBoardRequestDto.getContent());
     }
 
@@ -219,7 +221,7 @@ class BoardServiceTest {
         verify(commentRepository).countByBoardId(boardId);
         verify(commentRepository).deleteAllByBoardId(boardId);
         verify(board).delete();
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
     }
 
     @Test
@@ -239,7 +241,7 @@ class BoardServiceTest {
         verify(boardRepository).findWithUsernameById(boardId);
         verify(commentRepository).countByBoardId(boardId);
         verify(board).delete();
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
     }
 
     @Test
@@ -290,10 +292,10 @@ class BoardServiceTest {
 
         //then
         verify(boardRepository).findAllWithUsername(getBoardAllRequestDto.getLimit(), offset);
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
-        DataResponseDto<List<Board>> dataResponse = (DataResponseDto) response;
-        assertThat(dataResponse.getData()).isNotEmpty();
-        assertThat(dataResponse.getData().size()).isEqualTo(boards.size());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
+        DataResponseDto<BoardListDto> dataResponse = (DataResponseDto) response;
+        assertThat(dataResponse.getData().getBoardList()).isNotEmpty();
+        assertThat(dataResponse.getData().getBoardList().size()).isEqualTo(boards.size());
     }
 
     @Test
@@ -309,9 +311,9 @@ class BoardServiceTest {
 
         //then
         verify(boardRepository).findAllWithUsername(getBoardAllRequestDto.getLimit(), offset);
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
-        DataResponseDto<List<Board>> dataResponse = (DataResponseDto) response;
-        assertThat(dataResponse.getData()).isEmpty();
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
+        DataResponseDto<BoardListDto> dataResponse = (DataResponseDto) response;
+        assertThat(dataResponse.getData().getBoardList()).isEmpty();
     }
 
     @Test
@@ -332,10 +334,10 @@ class BoardServiceTest {
         ResponseDto response = boardService.getSearchBoard(getSearchBoardListRequestDto);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(boardRepository).findBoardByTypeAndKeyword(successType, successKeyword);
-        DataResponseDto<List<Board>> dataResponse = (DataResponseDto) response;
-        assertThat(dataResponse.getData()).hasSize(boards.size());
+        DataResponseDto<BoardSearchListDto> dataResponse = (DataResponseDto) response;
+        assertThat(dataResponse.getData().getBoardList()).hasSize(boards.size());
     }
 
     @Test
@@ -355,9 +357,9 @@ class BoardServiceTest {
         ResponseDto response = boardService.getSearchBoard(getSearchBoardListRequestDto);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(boardRepository).findBoardByTypeAndKeyword(successType, successKeyword);
-        DataResponseDto<List<Board>> dataResponse = (DataResponseDto) response;
-        assertThat(dataResponse.getData()).isEmpty();
+        DataResponseDto<BoardSearchListDto> dataResponse = (DataResponseDto) response;
+        assertThat(dataResponse.getData().getBoardList()).isEmpty();
     }
 }

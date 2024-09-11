@@ -1,6 +1,6 @@
 package board.service.V2;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.ResponseDto;
 import board.entity.V2.Member;
@@ -70,7 +70,7 @@ class MemberServiceTest {
         ResponseDto response = memberService.signUp(validSignUpRequestDto);
 
         // then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(memberRepository).existsByUsername(validSignUpRequestDto.getUsername());
         verify(memberRepository).existsByEmail(validSignUpRequestDto.getEmail());
         verify(bCryptPasswordEncoder).encode(validSignUpRequestDto.getPassword());
@@ -87,7 +87,7 @@ class MemberServiceTest {
         ResponseDto response = memberService.signUp(duplicatedUsernameSignUpRequestDto);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.DUPLICATE_USERNAME.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.DUPLICATE_USERNAME.getCode());
         verify(memberRepository).existsByUsername(duplicatedUsernameSignUpRequestDto.getUsername());
     }
 
@@ -101,7 +101,7 @@ class MemberServiceTest {
         ResponseDto response = memberService.signUp(duplicatedEmailSignUpRequestDto);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.DUPLICATE_EMAIL.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.DUPLICATE_EMAIL.getCode());
         verify(memberRepository).existsByUsername(duplicatedEmailSignUpRequestDto.getUsername());
     }
 }

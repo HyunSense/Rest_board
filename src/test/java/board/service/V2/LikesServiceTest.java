@@ -1,6 +1,6 @@
 package board.service.V2;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.response.ResponseDto;
 import board.entity.V2.Board;
 import board.entity.V2.Likes;
@@ -98,7 +98,7 @@ public class LikesServiceTest {
         ResponseDto response = likesService.toggleLikes(memberId, boardId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(memberRepository).findById(memberId);
         verify(boardRepository).findById(boardId);
         verify(likesRepository).findByMemberIdAndBoardId(memberId, boardId);
@@ -120,7 +120,7 @@ public class LikesServiceTest {
         ResponseDto response = likesService.toggleLikes(memberId, boardId);
 
         //then
-        assertThat(response.getCode()).isEqualTo(ResponseCode2.SUCCESS.getValue());
+        assertThat(response.getCode()).isEqualTo(ResponseCode.SUCCESS.getCode());
         verify(memberRepository).findById(memberId);
         verify(boardRepository).findById(boardId);
         verify(likesRepository).findByMemberIdAndBoardId(memberId, boardId);
