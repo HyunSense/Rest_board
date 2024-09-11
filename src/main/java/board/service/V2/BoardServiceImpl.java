@@ -4,7 +4,9 @@ import board.common.util.AuthorizationUtils;
 import board.dto.request.board.*;
 import board.dto.response.DataResponseDto;
 import board.dto.response.ResponseDto;
-import board.dto.response.board.V2.PostDto;
+import board.dto.response.board.V2.BoardDto;
+import board.dto.response.board.V2.BoardListDto;
+import board.dto.response.board.V2.BoardSearchListDto;
 import board.entity.V2.Board;
 import board.entity.V2.Member;
 import board.exception.BoardNotFoundException;
@@ -57,9 +59,8 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findWithUsernameById(id)
                 .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
         board.increaseViewCount();
-        PostDto postDto = PostDto.builder().board(board).build();
 
-        return DataResponseDto.success(postDto);
+        return DataResponseDto.success(BoardDto.fromEntity(board));
     }
 
     @Override
@@ -71,25 +72,33 @@ public class BoardServiceImpl implements BoardService {
         int offset = (page - 1) * limit;
 
         List<Board> boards = boardRepository.findAllWithUsername(limit, offset);
-        List<PostDto> postList = boards.stream()
-                .map(b -> PostDto.builder().board(b).build())
-                .collect(Collectors.toList());
+
+        List<BoardDto> boardList = boards.stream()
+        .map(b -> BoardDto.fromEntity(b))
+        .collect(Collectors.toList());
 
 
-        return DataResponseDto.success(postList);
+        return DataResponseDto.success(BoardListDto.fromEntity(page, limit, boardList));
     }
 
+    //TODO: 페이징 구현 필요
     @Override
     public ResponseDto getSearchBoard(GetSearchBoardListRequestDto dto) {
 
         String type = dto.getType();
         String keyword = dto.getKeyword();
         List<Board> boards = boardRepository.findBoardByTypeAndKeyword(type, keyword);
-        List<PostDto> postList = boards.stream()
-                .map(b -> PostDto.builder().board(b).build())
+
+//        List<BoardDto> boardList = boards.stream()
+//                .map(b -> BoardDto.fromEntity(b))
+//                .collect(Collectors.toList());
+
+        List<BoardDto> boardList = boards.stream()
+                .map(b -> BoardDto.fromEntity(b))
                 .collect(Collectors.toList());
 
-        return DataResponseDto.success(postList);
+//        return DataResponseDto.success(BoardListDto.fromEntity(0, 0, boardList));
+        return DataResponseDto.success(BoardSearchListDto.fromEntity(boardList));
     }
 
     @Override
@@ -126,82 +135,4 @@ public class BoardServiceImpl implements BoardService {
 
         return ResponseDto.success();
     }
-
-    /*@Override
-    public ResponseDtoV2 createComment(PostCommentRequestDto dto, Long memberId, Long boardId) {
-
-        Member member = memberRepository.findById(memberId);
-
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
-
-        Comment comment = Comment.builder()
-                .board(board)
-                .member(member)
-                .content(dto.getContent())
-                .build();
-
-        commentRepository.save(comment);
-        board.increaseComment();
-
-        return ResponseDtoV2.success();
-    }
-
-    @Override
-    public ResponseDtoV2 deleteComment(Long memberId, Long boardId, Long id) {
-
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
-
-        Comment comment = commentRepository.findWithUsernameById(id)
-                .orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글 입니다."));
-
-        AuthorizationUtils.validateMemberAuthorization(comment.getMember().getId(), memberId);
-
-        board.decreaseComment();
-        comment.delete();
-
-        return ResponseDtoV2.success();
-    }
-
-
-    @Override
-    public ResponseDtoV2 getCommentList(Long boardId) {
-
-        boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
-
-        List<Comment> comments = commentRepository.findAllWithUsernameByBoardId(boardId);
-        List<CommentDto> dtoList = comments.stream()
-                .map(c -> CommentDto.builder().comment(c).build())
-                .collect(Collectors.toList());
-
-        return DataResponseDto.success(dtoList);
-    }
-
-    @Override
-    public ResponseDtoV2 toggleLikes(Long memberId, Long boardId) {
-
-        Member member = memberRepository.findById(memberId);
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
-
-        Optional<Likes> likesOpt = likesRepository.findByMemberIdAndBoardId(memberId, boardId);
-
-        if (likesOpt.isEmpty()) {
-            Likes likes = Likes.builder()
-                    .member(member)
-                    .board(board)
-                    .build();
-
-            likesRepository.save(likes);
-            board.increaseLikes();
-
-        } else {
-            likesRepository.deleteByMemberIdAndBoardId(memberId, boardId);
-            board.decreaseLikes();
-        }
-
-        return ResponseDtoV2.success();
-    }*/
 }

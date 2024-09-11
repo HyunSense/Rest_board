@@ -1,4 +1,4 @@
-create table member
+create table if not exists member
 (
     id           bigint auto_increment primary key,
     username     varchar(50) unique      not null,
@@ -10,7 +10,7 @@ create table member
     updated_at   datetime default current_timestamp on update current_timestamp not null
 );
 
-create table board
+create table if not exists board
 (
     id           bigint auto_increment primary key,
     member_id    bigint                          not null,
@@ -26,7 +26,7 @@ create table board
         foreign key (member_id) references member (id)
 );
 
-create table comment
+create table if not exists comment
 (
     id         bigint auto_increment
         primary key,
@@ -41,7 +41,7 @@ create table comment
         foreign key (member_id) references member (id)
 );
 
-create table likes
+create table if not exists likes
 (
     member_id bigint not null,
     board_id bigint      not null,

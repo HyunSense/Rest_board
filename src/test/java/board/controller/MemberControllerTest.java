@@ -1,7 +1,6 @@
 package board.controller;
 
 import board.common.ResponseCode;
-import board.common.ResponseMessage;
 import board.dto.request.auth.LoginRequestDto;
 import board.dto.request.auth.SignUpRequestDto;
 import board.service.MemberService;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest
-//@TestPropertySource(locations = "classpath:application-test.properties")
 class MemberControllerTest {
 
     @Autowired
@@ -66,8 +64,8 @@ class MemberControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(signUpRequestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.SUCCESS.getMessage()))
                 .andDo(print());
     }
 
@@ -87,8 +85,8 @@ class MemberControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(signUpRequestDtoNameFieldNull)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_FAILED))
-                .andExpect(jsonPath("$.message").value(ResponseMessage.VALIDATION_FAILED))
+                .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_FAILED.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.VALIDATION_FAILED.getMessage()))
                 .andDo(print());
     }
 
@@ -109,8 +107,8 @@ class MemberControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(signUpRequestDtoExistUsername)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(ResponseCode.DUPLICATE_USERNAME))
-                .andExpect(jsonPath("$.message").value(ResponseMessage.DUPLICATE_USERNAME))
+                .andExpect(jsonPath("$.code").value(ResponseCode.DUPLICATE_USERNAME.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.DUPLICATE_USERNAME.getMessage()))
                 .andDo(print());
     }
 
@@ -129,8 +127,48 @@ class MemberControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(loginRequestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value(ResponseMessage.SUCCESS))
+                .andExpect(jsonPath("$.code").value(ResponseCode.SUCCESS.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.SUCCESS.getMessage()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 잘못된 아이디")
+    void loginFailedWrongUsername() throws Exception {
+        //given
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setUsername("wrongUsername");
+        loginRequestDto.setPassword("testPassword");
+
+        //when
+        mockMvc.perform(
+                        post("/api/v1/auth/login")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ResponseCode.LOGIN_FAILED.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.LOGIN_FAILED.getMessage()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 잘못된 비밀번호")
+    void loginFailedWrongPassword() throws Exception {
+        //given
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setUsername("testMember");
+        loginRequestDto.setPassword("wrongPassword");
+
+        //when
+        mockMvc.perform(
+                        post("/api/v1/auth/login")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ResponseCode.LOGIN_FAILED.getCode()))
+                .andExpect(jsonPath("$.message").value(ResponseCode.LOGIN_FAILED.getMessage()))
                 .andDo(print());
     }
 }

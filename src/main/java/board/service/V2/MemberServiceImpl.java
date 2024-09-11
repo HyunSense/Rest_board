@@ -1,6 +1,6 @@
 package board.service.V2;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.dto.request.auth.SignUpRequestDto;
 import board.dto.response.ResponseDto;
 import board.entity.V2.Member;
@@ -28,11 +28,11 @@ public class MemberServiceImpl implements MemberService {
     public ResponseDto signUp(SignUpRequestDto dto) {
 
         if (memberRepository.existsByUsername(dto.getUsername())) {
-            return ResponseDto.failure(ResponseCode2.DUPLICATE_USERNAME);
+            return ResponseDto.failure(ResponseCode.DUPLICATE_USERNAME, HttpStatus.BAD_REQUEST);
         }
 
         if (memberRepository.existsByEmail(dto.getEmail())) {
-            return ResponseDto.failure(ResponseCode2.DUPLICATE_EMAIL);
+            return ResponseDto.failure(ResponseCode.DUPLICATE_EMAIL, HttpStatus.BAD_REQUEST);
         }
 
         String rawPassword = dto.getPassword();

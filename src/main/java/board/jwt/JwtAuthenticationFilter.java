@@ -1,6 +1,6 @@
 package board.jwt;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import board.config.auth.PrincipalDetails;
 import board.dto.request.auth.LoginRequestDto;
 import board.dto.response.DataResponseDto;
@@ -99,6 +99,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode2.LOGIN_FAILED));
+        objectMapper.writeValue(response.getWriter(), ResponseDto.failure(ResponseCode.LOGIN_FAILED));
     }
 }
