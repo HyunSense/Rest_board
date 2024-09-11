@@ -1,6 +1,7 @@
 package board.dto.response;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +10,8 @@ public class ResponseDto {
 
     private String code;
     private String message;
+
+    @JsonIgnore
     private HttpStatus status;
 
     public ResponseDto(String code, String message) {
@@ -22,14 +25,14 @@ public class ResponseDto {
     }
 
     public static ResponseDto success() {
-        return new ResponseDto(ResponseCode2.SUCCESS.getValue(), ResponseCode2.SUCCESS.getDescription());
+        return new ResponseDto(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), HttpStatus.OK);
     }
 
-    public static ResponseDto failure(ResponseCode2 code2) {
-        return new ResponseDto(code2.getValue(), code2.getDescription());
+    public static ResponseDto failure(ResponseCode code2) {
+        return new ResponseDto(code2.getCode(), code2.getMessage());
     }
 
-    public static ResponseDto failure(ResponseCode2 code2, HttpStatus status) {
-        return new ResponseDto(code2.getValue(), code2.getDescription(), status);
+    public static ResponseDto failure(ResponseCode code2, HttpStatus status) {
+        return new ResponseDto(code2.getCode(), code2.getMessage(), status);
     }
 }

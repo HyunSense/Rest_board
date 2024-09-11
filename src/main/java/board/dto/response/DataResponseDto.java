@@ -1,20 +1,19 @@
 package board.dto.response;
 
-import board.common.ResponseCode2;
+import board.common.ResponseCode;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class DataResponseDto<T> extends ResponseDto {
 
     T data;
 
-    private DataResponseDto(String code, String message, HttpStatus status, T data) {
-        super(code, message, status);
+    private DataResponseDto(String code, String message, T data) {
+        super(code, message);
         this.data = data;
     }
 
     public static <T> DataResponseDto<T> success(T data) {
-        return new DataResponseDto<>(ResponseCode2.SUCCESS.getValue(), ResponseCode2.SUCCESS.getDescription(), HttpStatus.OK, data);
+        return new DataResponseDto<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), data);
     }
 }
