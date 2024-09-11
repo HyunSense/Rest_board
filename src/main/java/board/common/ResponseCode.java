@@ -1,30 +1,36 @@
 package board.common;
 
-public interface ResponseCode {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    // Http Status 200
-    String SUCCESS = "SU";
+@Getter
+@RequiredArgsConstructor
+public enum ResponseCode {
 
-    // Http Status 404
-    String NOT_EXIST_RESULT = "NER";
+    // status 200
+    SUCCESS("SU", "Success"),
 
-    // Http Status 400
-    String VALIDATION_FAILED = "VF";
-    String DUPLICATE_USERNAME = "DU";
-    String DUPLICATE_EMAIL = "DE";
-    String NOT_EXIST_USER = "NU";
-    String NOT_EXIST_BOARD = "NB";
-    String NOT_EXIST_COMMENT = "NC";
+    // status 400
+    DUPLICATE_USERNAME("DU", "Duplicate username"),
+    DUPLICATE_EMAIL("DE", "Duplicate email"),
+    VALIDATION_FAILED("VF", "Validation failed"),
+    NOT_EXIST_USER("NU", "Not exists user"),
+    NOT_EXIST_BOARD("NB", "Not exists board"),
+    NOT_EXIST_COMMENT("NC", "Not exists comment"),
 
-    // Http Status 401
-    String LOGIN_FAILED = "LF";
-    String TOKEN_EXPIRED = "TE";
-    String INVALID_TOKEN = "IT";
+    // status 401
+    LOGIN_FAILED("LF", "Login failed"),
+    TOKEN_EXPIRED("TE", "Token expired"),
+    INVALID_TOKEN("IT", "Invalid token"),
 
-    // Http status 403
-    String PERMISSION_DENIED = "PD";
+    // status 403
+    PERMISSION_DENIED("PD", "Permission denied"),
 
-    // Http Status 500
-    String DATABASE_ERROR = "DBE";
+    // status 500
+    DATABASE_ERROR("DE", "Database error");
+
+
+    private final String code;
+    private final String message;
 
 }
