@@ -36,17 +36,4 @@ public class Member {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-//    //TODO: LAZY 걸지 않는 이유
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<Board> boards = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<Comment> comments = new ArrayList<>();
-
-//    public void addBoard(Board board) {
-//        boards.add(board);
-//        board.setMember(this);
-//    }
-
 }

@@ -32,10 +32,6 @@ public class Comment {
 
     private boolean isDeleted;
 
-//    public void setBoard(Board board) {
-//        this.board = board;
-//    }
-
     public void delete() {
         this.isDeleted = true;
     }
