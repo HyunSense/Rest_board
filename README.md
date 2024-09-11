@@ -1,6 +1,12 @@
-## 변경내역
+## V2 주요 변경내역
 ### MyBatis -> JPA Migration
-- MemberRepository Test 완료
+- Mybatis Entity -> JPA Entity로 수정
+- 기존 요청별 ResponseDto -> ResponseDto, DataResponseDto 통합
+- Post, Comment 에 대한 Dto추가 (PostDto, PostListDto, BoardSearchDto..)
+- Service 계층 기능 분리, 기존 BoardService -> BoardService, CommentService, LikesService로 변경
+- Service 계층 반환타입 ResponseEntity<ResponseDto> -> ResponseDto(계층별 명확한 분리를 위해 변경)
+- 기존 에러(글 존재여부, 중복된 Content)를 예외처리 방식으로 변경 (ExceptionHandler로 통합)
+- Interface ResponseCode, Message -> Enum ResponseCode로 변경
 
 
 ## 프로젝트 주요기능
